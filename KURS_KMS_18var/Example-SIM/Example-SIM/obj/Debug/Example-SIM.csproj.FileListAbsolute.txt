@@ -1,0 +1,65 @@
+C:\Users\derevyankindenis\Desktop\123\Пример для ЛР\Example-SIM\Example-SIM\bin\Debug\Example-SIM.exe.config
+C:\Users\derevyankindenis\Desktop\123\Пример для ЛР\Example-SIM\Example-SIM\bin\Debug\Example-SIM.exe
+C:\Users\derevyankindenis\Desktop\123\Пример для ЛР\Example-SIM\Example-SIM\bin\Debug\Example-SIM.pdb
+C:\Users\derevyankindenis\Desktop\123\Пример для ЛР\Example-SIM\Example-SIM\bin\Debug\PSS.dll
+C:\Users\derevyankindenis\Desktop\123\Пример для ЛР\Example-SIM\Example-SIM\obj\Debug\Example-SIM.exe
+C:\Users\derevyankindenis\Desktop\123\Пример для ЛР\Example-SIM\Example-SIM\obj\Debug\Example-SIM.pdb
+C:\Users\derevyankindenis\Desktop\123\Пример для ЛР\Example-SIM (консоль)\Example-SIM\bin\Debug\Example-SIM.exe.config
+C:\Users\derevyankindenis\Desktop\123\Пример для ЛР\Example-SIM (консоль)\Example-SIM\obj\Debug\Example-SIM.exe
+C:\Users\derevyankindenis\Desktop\123\Пример для ЛР\Example-SIM (консоль)\Example-SIM\obj\Debug\Example-SIM.pdb
+C:\Users\derevyankindenis\Desktop\123\Пример для ЛР\Example-SIM (консоль)\Example-SIM\bin\Debug\Example-SIM.exe
+C:\Users\derevyankindenis\Desktop\123\Пример для ЛР\Example-SIM (консоль)\Example-SIM\bin\Debug\Example-SIM.pdb
+C:\Users\derevyankindenis\Desktop\123\Пример для ЛР\Example-SIM (консоль)\Example-SIM\bin\Debug\PSS.dll
+C:\Users\derevyankindenis\Desktop\123\Пример для ЛР\Example-SIM (консоль)\Example-SIM\obj\Debug\Example-SIM.csprojResolveAssemblyReference.cache
+C:\Users\derevyankindenis\Desktop\123\Пример для ЛР\Example-SIM (ГИ)\Example-SIM\Example-SIM\bin\Debug\Example-SIM.exe.config
+C:\Users\derevyankindenis\Desktop\123\Пример для ЛР\Example-SIM (ГИ)\Example-SIM\Example-SIM\obj\Debug\Example-SIM.exe
+C:\Users\derevyankindenis\Desktop\123\Пример для ЛР\Example-SIM (ГИ)\Example-SIM\Example-SIM\obj\Debug\Example-SIM.pdb
+C:\Users\derevyankindenis\Desktop\123\Пример для ЛР\Example-SIM (ГИ)\Example-SIM\Example-SIM\bin\Debug\Example-SIM.exe
+C:\Users\derevyankindenis\Desktop\123\Пример для ЛР\Example-SIM (ГИ)\Example-SIM\Example-SIM\bin\Debug\Example-SIM.pdb
+C:\Users\derevyankindenis\Desktop\123\Пример для ЛР\Example-SIM (ГИ)\Example-SIM\Example-SIM\bin\Debug\PSS.dll
+C:\Users\derevyankindenis\Desktop\123\Пример для ЛР\Example-SIM (ГИ)\Example-SIM\Example-SIM\obj\Debug\Example-SIM.csprojResolveAssemblyReference.cache
+E:\ЛР по КМС\Пример для ЛР\Example-SIM (ГИ)\Example-SIM\Example-SIM\bin\Debug\Example-SIM.exe.config
+E:\ЛР по КМС\Пример для ЛР\Example-SIM (ГИ)\Example-SIM\Example-SIM\obj\Debug\Example-SIM.exe
+E:\ЛР по КМС\Пример для ЛР\Example-SIM (ГИ)\Example-SIM\Example-SIM\obj\Debug\Example-SIM.pdb
+C:\Users\Student\Desktop\LR_KMS\src\examples\Example-SIM (ГИ)\Example-SIM\Example-SIM\bin\Debug\Example-SIM.exe.config
+C:\Users\Student\Desktop\LR_KMS\src\examples\Example-SIM (ГИ)\Example-SIM\Example-SIM\obj\Debug\Example-SIM.exe
+C:\Users\Student\Desktop\LR_KMS\src\examples\Example-SIM (ГИ)\Example-SIM\Example-SIM\obj\Debug\Example-SIM.pdb
+C:\Users\Student\Desktop\LR_KMS\src\examples\Example-SIM (ГИ)\Example-SIM\Example-SIM\bin\Debug\Example-SIM.exe
+C:\Users\Student\Desktop\LR_KMS\src\examples\Example-SIM (ГИ)\Example-SIM\Example-SIM\bin\Debug\Example-SIM.pdb
+C:\Users\Student\Desktop\LR_KMS\src\examples\Example-SIM (ГИ)\Example-SIM\Example-SIM\bin\Debug\PSS.dll
+C:\Users\Student\Desktop\LR_KMS\src\examples\Example-SIM (ГИ)\Example-SIM\Example-SIM\obj\Debug\Example-SIM.csprojResolveAssemblyReference.cache
+C:\MEGA\Учёба 5 семестр\Компьютерное моделирование\LR_KMS\src\examples\Example-SIM (ГИ)\Example-SIM\Example-SIM\bin\Debug\Example-SIM.exe.config
+C:\MEGA\Учёба 5 семестр\Компьютерное моделирование\LR_KMS\src\examples\Example-SIM (ГИ)\Example-SIM\Example-SIM\bin\Debug\Example-SIM.exe
+C:\MEGA\Учёба 5 семестр\Компьютерное моделирование\LR_KMS\src\examples\Example-SIM (ГИ)\Example-SIM\Example-SIM\bin\Debug\Example-SIM.pdb
+C:\MEGA\Учёба 5 семестр\Компьютерное моделирование\LR_KMS\src\examples\Example-SIM (ГИ)\Example-SIM\Example-SIM\bin\Debug\PSS.dll
+C:\MEGA\Учёба 5 семестр\Компьютерное моделирование\LR_KMS\src\examples\Example-SIM (ГИ)\Example-SIM\Example-SIM\obj\Debug\Example-SIM.csprojResolveAssemblyReference.cache
+C:\MEGA\Учёба 5 семестр\Компьютерное моделирование\LR_KMS\src\examples\Example-SIM (ГИ)\Example-SIM\Example-SIM\obj\Debug\Example-SIM.exe
+C:\MEGA\Учёба 5 семестр\Компьютерное моделирование\LR_KMS\src\examples\Example-SIM (ГИ)\Example-SIM\Example-SIM\obj\Debug\Example-SIM.pdb
+C:\Users\asusx553\Documents\MyGit\simc-\Example-SIM (ГИ)\Example-SIM\Example-SIM\bin\Debug\Example-SIM.exe.config
+C:\Users\asusx553\Documents\MyGit\simc-\Example-SIM (ГИ)\Example-SIM\Example-SIM\obj\Debug\Example-SIM.exe
+C:\Users\asusx553\Documents\MyGit\simc-\Example-SIM (ГИ)\Example-SIM\Example-SIM\obj\Debug\Example-SIM.pdb
+C:\Users\asusx553\Documents\MyGit\simc-\Example-SIM (ГИ)\Example-SIM\Example-SIM\obj\Debug\Example-SIM.csprojResolveAssemblyReference.cache
+C:\Users\Nick Khrapov\Desktop\simc--master\Example-SIM (ГИ)\Example-SIM\Example-SIM\bin\Debug\Example-SIM.exe.config
+C:\Users\Nick Khrapov\Desktop\simc--master\Example-SIM (ГИ)\Example-SIM\Example-SIM\bin\Debug\Example-SIM.exe
+C:\Users\Nick Khrapov\Desktop\simc--master\Example-SIM (ГИ)\Example-SIM\Example-SIM\bin\Debug\Example-SIM.pdb
+C:\Users\Nick Khrapov\Desktop\simc--master\Example-SIM (ГИ)\Example-SIM\Example-SIM\bin\Debug\PSS.dll
+C:\Users\Nick Khrapov\Desktop\simc--master\Example-SIM (ГИ)\Example-SIM\Example-SIM\obj\Debug\Example-SIM.csprojResolveAssemblyReference.cache
+C:\Users\Nick Khrapov\Desktop\simc--master\Example-SIM (ГИ)\Example-SIM\Example-SIM\obj\Debug\Example-SIM.exe
+C:\Users\Nick Khrapov\Desktop\simc--master\Example-SIM (ГИ)\Example-SIM\Example-SIM\obj\Debug\Example-SIM.pdb
+C:\Users\asusx553\Documents\MyGit\simc-\Example-SIM (ГИ)\Example-SIM\Example-SIM\bin\Debug\Example-SIM.exe
+C:\Users\asusx553\Documents\MyGit\simc-\Example-SIM (ГИ)\Example-SIM\Example-SIM\bin\Debug\Example-SIM.pdb
+C:\Users\asusx553\Documents\MyGit\simc-\Example-SIM (ГИ)\Example-SIM\Example-SIM\bin\Debug\PSS.dll
+C:\Users\Nick Khrapov\Desktop\simc-\Example-SIM (ГИ)\Example-SIM\Example-SIM\bin\Debug\Example-SIM.exe.config
+C:\Users\Nick Khrapov\Desktop\simc-\Example-SIM (ГИ)\Example-SIM\Example-SIM\bin\Debug\Example-SIM.exe
+C:\Users\Nick Khrapov\Desktop\simc-\Example-SIM (ГИ)\Example-SIM\Example-SIM\bin\Debug\Example-SIM.pdb
+C:\Users\Nick Khrapov\Desktop\simc-\Example-SIM (ГИ)\Example-SIM\Example-SIM\bin\Debug\PSS.dll
+C:\Users\Nick Khrapov\Desktop\simc-\Example-SIM (ГИ)\Example-SIM\Example-SIM\obj\Debug\Example-SIM.csprojResolveAssemblyReference.cache
+C:\Users\Nick Khrapov\Desktop\simc-\Example-SIM (ГИ)\Example-SIM\Example-SIM\obj\Debug\Example-SIM.exe
+C:\Users\Nick Khrapov\Desktop\simc-\Example-SIM (ГИ)\Example-SIM\Example-SIM\obj\Debug\Example-SIM.pdb
+C:\Users\Nick Khrapov\Desktop\simc--Capybaras_paw\Example-SIM (ГИ)\Example-SIM\Example-SIM\bin\Debug\Example-SIM.exe.config
+C:\Users\Nick Khrapov\Desktop\simc--Capybaras_paw\Example-SIM (ГИ)\Example-SIM\Example-SIM\bin\Debug\Example-SIM.exe
+C:\Users\Nick Khrapov\Desktop\simc--Capybaras_paw\Example-SIM (ГИ)\Example-SIM\Example-SIM\bin\Debug\Example-SIM.pdb
+C:\Users\Nick Khrapov\Desktop\simc--Capybaras_paw\Example-SIM (ГИ)\Example-SIM\Example-SIM\bin\Debug\PSS.dll
+C:\Users\Nick Khrapov\Desktop\simc--Capybaras_paw\Example-SIM (ГИ)\Example-SIM\Example-SIM\obj\Debug\Example-SIM.csprojResolveAssemblyReference.cache
+C:\Users\Nick Khrapov\Desktop\simc--Capybaras_paw\Example-SIM (ГИ)\Example-SIM\Example-SIM\obj\Debug\Example-SIM.exe
+C:\Users\Nick Khrapov\Desktop\simc--Capybaras_paw\Example-SIM (ГИ)\Example-SIM\Example-SIM\obj\Debug\Example-SIM.pdb
