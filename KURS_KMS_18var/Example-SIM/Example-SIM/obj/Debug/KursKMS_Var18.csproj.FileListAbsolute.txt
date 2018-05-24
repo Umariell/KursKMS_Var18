@@ -1,7 +1,0 @@
-D:\Загрузки\KURS_KMS_18var_ziperrr\KURS_KMS_18var\Example-SIM\Example-SIM\bin\Debug\Example-SIM.exe.config
-D:\Загрузки\KURS_KMS_18var_ziperrr\KURS_KMS_18var\Example-SIM\Example-SIM\obj\Debug\Example-SIM.exe
-D:\Загрузки\KURS_KMS_18var_ziperrr\KURS_KMS_18var\Example-SIM\Example-SIM\obj\Debug\Example-SIM.pdb
-C:\Users\User\Desktop\KURS_KMS_18var_ziperrr\KURS_KMS_18var\Example-SIM\Example-SIM\obj\Debug\KursKMS_Var18.csprojResolveAssemblyReference.cache
-C:\Users\User\Desktop\KURS_KMS_18var_ziperrr\KURS_KMS_18var\Example-SIM\Example-SIM\obj\Debug\KursKMS_Var18.csproj.CoreCompileInputs.cache
-C:\Users\User\Desktop\KURS_KMS_18var_ziperrr\KURS_KMS_18var\Example-SIM\Example-SIM\obj\Debug\Example-SIM.exe
-C:\Users\User\Desktop\KURS_KMS_18var_ziperrr\KURS_KMS_18var\Example-SIM\Example-SIM\obj\Debug\Example-SIM.pdb
