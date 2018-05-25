@@ -66,37 +66,19 @@ namespace Model_Lab
 
             #region Задание начальных значений модельных переменных и объектов
 
-            Shops[0].ProductAmountCurrent.Value = VV;   //начальный объем спроса в первом магазине
-            Shops[1].ProductAmountCurrent.Value = VV;   //начальный объем спроса во втором магазине
-
-            KVCH = 0;                        // количество вошедших читателей
-            NRO = 0;                         // количество обслуженных читателей
-
-            LVQP = VQ.Count;                 // длина входной очереди читателей
-            LSB = KOL;                       // длина очереди свободных библиотекарей
-
-            TOZ.Value = 0.0;                 // время нахождения читателей в системе
-
-            TSPB = 0.0;                      // суммарное время простоя библиотекарей
-
-            VQ.Clear();
-
-
-            for (int i = 0; i < KOL; i++)
+                                                       
+            for (int i=0; i<N; i++)
             {
-                Librarian libr = new Librarian();
-                libr.NB = i;
-                libr.time_osv = 0.0;
-
-                var QueueRecord = new LibrarianRec();           // создание объекта элемента очереди
-                QueueRecord.L = libr;                           // передача в созданный объект объекта читателя
-                SB.Add(QueueRecord);                            // добавление элемента в очередь
-
-                QNBL[i].Clear();
-
-                KZS[i].Value = 0;
+                Shops[i].ProductAmountCurrent.Value = VV;   // начальный объем товара в i-том магазине
+                Shops[i].ProductDemandCurrent.Value = 0;    // начальный объем спроса на товар в i-том магазине
+                SVP[i].Value = 0;
+                SVNS[i].Value = 0;
+                SKZ[i].Value = 0;
+                Flag[i].Value = false;
+                
             }
-
+            SVST.Value = 0;
+            #endregion
 
             #region Cброс сборщиков статистики
 

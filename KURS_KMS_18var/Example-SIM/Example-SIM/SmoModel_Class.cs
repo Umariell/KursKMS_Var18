@@ -113,7 +113,7 @@ namespace Model_Lab
         /// <summary>
         /// текущий суммарный объем спроса на товар
         /// </summary>
-        public TRealVar[] SVST;
+        public TRealVar SVST;
 
         #endregion
 
