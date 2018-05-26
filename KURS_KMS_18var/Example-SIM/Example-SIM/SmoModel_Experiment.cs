@@ -115,8 +115,7 @@ namespace Model_Lab
             Tracer.TraceOut("==============================================================");
             Tracer.AnyTrace("");
             Tracer.TraceOut("Время моделирования: " + string.Format("{0:0.00}", Time));
-            //Tracer.TraceOut("Количество вошедших заявок : " + KVCH);
-            //Tracer.TraceOut("МО времени нахождения заявок в системе : " + string.Format("{0:0.00}", Variance_TOZ.Mx / NRO));
+            
 
             for (int i=0; i<N; i++)
             {
@@ -131,6 +130,7 @@ namespace Model_Lab
                                                                              (SKZ[0].Value  * PPZ / Time) + (SKZ[1].Value  * PPZ / Time))) ;
 
         }
+
 
         //Печать строки состояния
         void TraceModel()
