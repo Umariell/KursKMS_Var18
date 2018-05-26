@@ -1,5 +1,6 @@
 using CommonModel.Kernel;
 using CommonModel.RandomStreamProducing;
+using CommonModel.StatisticsCollecting;
 using System;
 
 namespace Model_Lab
@@ -44,9 +45,17 @@ namespace Model_Lab
         public override void SetNextVariant(int variantCount)
         {
             #region Параметры модели
- 
+
+            TV = 60;
+            VV = 100;
+            PP = 3.50;
+            PNP = 7.98;
+            PPZ = 2.34;
+            TF = 7;
+            TP = 14400000;
 
             #endregion
+
 
 
             #region Установка параметров законов распределения
@@ -61,12 +70,13 @@ namespace Model_Lab
             #endregion
         }
 
+        #region Задание начальных параметров моделирования
+
         public override void StartModelling(int variantCount, int runCount)
         {
 
-            #region Задание начальных значений модельных переменных и объектов
-
-                                                       
+            //Задание начальных значений модельных переменных и объектов
+                                        
             for (int i=0; i<N; i++)
             {
                 Shops[i].ProductAmountCurrent.Value = VV;   // начальный объем товара в i-том магазине
@@ -78,20 +88,18 @@ namespace Model_Lab
                 
             }
             SVST.Value = 0;
-            #endregion
+           
 
-            #region Cброс сборщиков статистики
+            // Cброс сборщиков статистики
 
-
-
-            #endregion
+            foreach (var collector in GetObjectsByType<StatCollector>())
+                collector.ResetCollector();
 
             //Печать заголовка строки состояния модели
             TraceModel();
 
-            #region Планирование начальных событий
+            //Планирование начальных событий
 
-            // TODO: подсмотреть в аналогичный код на https://github.com/Talrandel/KMS/blob/master/Modelling.Lab1/SMOModel_Experiment.cs
 
             #endregion
 
@@ -101,35 +109,45 @@ namespace Model_Lab
         //Действия по окончанию прогона
         public override void FinishModelling(int variantCount, int runCount)
         {
+            Tracer.AnyTrace("");
             Tracer.TraceOut("==============================================================");
             Tracer.TraceOut("============Статистические результаты моделирования===========");
             Tracer.TraceOut("==============================================================");
-           
-            Tracer.TraceOut("Время моделирования: " + Time);
+            Tracer.AnyTrace("");
+            Tracer.TraceOut("Время моделирования: " + string.Format("{0:0.00}", Time));
+            //Tracer.TraceOut("Количество вошедших заявок : " + KVCH);
+            //Tracer.TraceOut("МО времени нахождения заявок в системе : " + string.Format("{0:0.00}", Variance_TOZ.Mx / NRO));
 
-            Tracer.TraceOut("Средние дневные потери от пролеживания товара в  1-ом магазине: " + (SVP[0].Value*PP / Time));
-            Tracer.TraceOut("Средние дневные потери от пролеживания товара во 2-ом магазине: " + (SVP[1].Value*PP / Time));
+            for (int i=0; i<N; i++)
+            {
 
-            Tracer.TraceOut("Средние дневные потери от неудовлетворенного спроса в  1-ом магазине: " + (SVNS[0].Value * PNP / Time));
-            Tracer.TraceOut("Средние дневные потери от неудовлетворенного спроса во 2-ом магазине: " + (SVNS[1].Value * PNP / Time));
+                Tracer.TraceOut("Средние дневные потери от пролеживания товара в  " + i + "- ом магазине: " + (SVP[i].Value * PP / Time));
+                Tracer.TraceOut("Средние дневные потери от неудовлетворенного спроса в  " + i + "-ом магазине: " + (SVNS[i].Value * PNP / Time));
+                Tracer.TraceOut("Средние дневные потери от подачи заявок в " + i + "-ом магазине: " + (SKZ[i].Value * PPZ / Time));
 
-            Tracer.TraceOut("Средние дневные потери от подачи заявок в  1-ом магазине: " + (SKZ[0].Value * PPZ / Time));
-            Tracer.TraceOut("Средние дневные потери от подачи заявок во 2-ом магазине: " + (SKZ[1].Value * PPZ / Time));
-
-            Tracer.TraceOut("Суммарные дневные потери торговой системы: " + (SDP_VP[0] + SDP_NS[0]+ SDP_VP[1] + SDP_NS[1]));
-            /*
-            * problem
-            */
+            }
+            Tracer.TraceOut("Суммарные дневные потери торговой системы: " + ((SVP[0].Value  * PP  / Time) + (SVP[1].Value  * PP  / Time) +
+                                                                             (SVNS[0].Value * PNP / Time) + (SVNS[1].Value * PNP / Time) +
+                                                                             (SKZ[0].Value  * PPZ / Time) + (SKZ[1].Value  * PPZ / Time))) ;
 
         }
 
         //Печать строки состояния
         void TraceModel()
         {
-            /*
-            * problem
-            */
-            // TODO: подсмотреть в аналогичный код на https://github.com/Talrandel/KMS/blob/master/Modelling.Lab1/SMOModel_Experiment.cs
+            Tracer.TraceOut("VTT[0].Value: " + VTT[0].Value + "VTT[1].Value: " + VTT[1].Value);
+
+            Tracer.TraceOut("SVP[0].Value: " + SVP[0].Value + "SVP[1].Value: " + SVP[1].Value);
+
+            Tracer.TraceOut("SVNS[0].Value: " + SVNS[0].Value + "SVNS[1].Value: " + SVNS[1].Value);
+
+            Tracer.TraceOut("SVST.Value: " + SVST.Value);
+
+            Tracer.TraceOut("Flag[0].Value: " + Flag[0].Value + "Flag[1].Value: " + Flag[1].Value); // TОDO: как вывести дни? (см. описание переменной Flag)
+
+            Tracer.TraceOut("SKZ[0].Value: " + SKZ[0].Value + "SKZ[1].Value: " + SKZ[1].Value);
+
+            Tracer.TraceOut("==============================================================");
         }
 
     }

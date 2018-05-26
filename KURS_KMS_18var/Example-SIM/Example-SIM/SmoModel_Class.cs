@@ -283,17 +283,6 @@ namespace Model_Lab
             Shops = new Shop[N];
             #endregion
 
-            #region Инициализация параметров модели, одинаковых для всех магазинов
-
-            TV = 60;
-            VV = 100;
-            PP = 3.50;
-            PNP = 7.98;
-            PPZ = 2.34;
-            TF = 7;
-            TP = 14400000;
-
-            #endregion
 
             #region Инициализация переменных состояния модели
             for (int i = 0; i < N; i++)
@@ -338,7 +327,6 @@ namespace Model_Lab
             UniformGenerator_TVost2 = InitModelObject<UniformStream>("генератор потока 'время восстановления товарного запаса во втором магазине'");
 
             #endregion
-
 
             #region Инициализация сборщиков статистики и подключение их к переменным
 
