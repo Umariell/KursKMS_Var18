@@ -1,13 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 using CommonModel.StatisticsCollecting;
 using CommonModel.RandomStreamProducing;
-using CommonModel.Collections;
 using CommonModel.Kernel;
-using CommonModel.Serialization;
-using System.Runtime.Serialization;
 
 namespace Model_Lab
 {
@@ -85,20 +79,20 @@ namespace Model_Lab
 
         #region Переменные состояния модели
 
-        /// <summary>
-        ///  текущий объем товара в i-ом магазине
-        /// </summary>
-        public TIntVar [] VTT;
+        ///// <summary>
+        /////  текущий объем товара в i-ом магазине
+        ///// </summary>
+        //public TIntVar [] VTT;
 
-        /// <summary>
-        /// суммарный объем пролежанного товара в i-ом магазине
-        /// </summary>
-        public TIntVar [] SVP;
+        ///// <summary>
+        ///// суммарный объем пролежанного товара в i-ом магазине
+        ///// </summary>
+        //public TIntVar [] SVP;
 
-        /// <summary>
-        /// суммарный объем неудовлетворенного спроса в i-ом магазине
-        /// </summary>
-        public TIntVar [] SVNS; 
+        ///// <summary>
+        ///// суммарный объем неудовлетворенного спроса в i-ом магазине
+        ///// </summary>
+        //public TIntVar [] SVNS; 
 
         /// <summary>
         /// идентификатор подачи очередной заявки на пополнение в i-ом магазине в день № t1 (true - заявка подана, false -заявка не подана)
@@ -111,13 +105,23 @@ namespace Model_Lab
         public TIntVar [] SKZ;
 
         /// <summary>
-        /// текущий суммарный объем спроса на товар
+        /// текущий суммарный объем спроса на товар (за день)
         /// </summary>
         public TRealVar SVST;
 
+        /// <summary>
+        /// Cуммарный объем спроса на товар (за все время)
+        /// </summary>
+        public TRealVar SVSTP;
+
+
+        // TODO: отдельные переменные, хранящая суммарный объем нереализованной продукции за день и за все время
+
+        public TIntVar SCNRT; // СуммарноеКоличествоНеРеализованногоТовара
+
         #endregion
 
-        #region Дополнительные структуры
+        #region Класс магазина с переменными состояния
 
         /// <summary>
         /// Класс магазина.
@@ -132,13 +136,12 @@ namespace Model_Lab
             /// <summary>
             /// Текущий объем товара в магазине.
             /// </summary>
-            public TIntVar ProductAmountCurrent { get; set; } //TODO: переменная состояния(?) в чем отличие от VTT
+            public TIntVar ProductAmountCurrent { get; set; }
 
             /// <summary>
             /// Список значений объема товара по дням.
             /// </summary>
             public List<TIntVar> ProductAmountAll { get; set; }
-
 
             /// <summary>
             /// Текущий объем спроса на товар магазина.
@@ -150,7 +153,6 @@ namespace Model_Lab
             /// </summary>
             public List<TIntVar> ProductDemandAll { get; set; }
 
-
             /// <summary>
             /// Текущий объем неудовлетворенного спроса на товар магазина.
             /// </summary>
@@ -160,6 +162,26 @@ namespace Model_Lab
             /// Список значений объемов неудовлетворенного спроса на товар по дням.
             /// </summary>
             public List<TIntVar> ProductUnmetDemandAll { get; set; }
+
+            /// <summary>
+            /// Текущий объем пролёжанного (нереализованного) товара.
+            /// </summary>
+            public TRealVar ProductUnrealizedCurrent { get; set; }
+
+            /// <summary>
+            /// Список значений объемов пролёжанного товара.
+            /// </summary>
+            public List<TRealVar> ProductUnrealizedAll { get; set; }
+
+            /// <summary>
+            /// Текущий объем потерь от подачи заявки.
+            /// </summary>
+            public TRealVar ProductLossRequestCurrent { get; set; }
+
+            /// <summary>
+            /// Список значений объемов потерь от подачи заявки.
+            /// </summary>
+            public List<TRealVar> ProductLossRequestAll { get; set; }
 
 
             /// <summary>
@@ -210,28 +232,30 @@ namespace Model_Lab
         /// <summary>
         /// средние дневные потери от пролеживания товара в i-том магазине
         /// </summary>
-        public Variance<double> Variance_SDP_PP;
+        public Variance<double>[] Variance_SDP_PP;
         public Min<double>[] Min_SDP_PP;
         public Max<double>[] Max_SDP_PP;
 
         /// <summary>
         /// средние дневные потери от неудовлетворенного спроса в i-том магазине
         /// </summary>
-        public Variance<double> Variance_SDP_PNP;
+        public Variance<int>[] Variance_SDP_PNP;
         public Min<double>[] Min_SDP_PNP;
         public Max<double>[] Max_SDP_PNP;
 
         /// <summary>
         /// средние дневные потери от подачи заявок в i-том магазине
         /// </summary>
-        public Variance<int> Variance_SDP_PPZ;
+        public Variance<double>[] Variance_SDP_PPZ;
         public Min<double>[] Min_SDP_PPZ;
         public Max<double>[] Max_SDP_PPZ;
 
         /// <summary>
         /// суммарные средние дневные потери торговой системы
         /// </summary>
-        public Variance<double> Variance_SSDS; // TODO: уточнить:нужен ли для него макс. и мин.?
+        public Variance<double> Variance_SSDS;
+        public Min<double>[] Min_SSDS;
+        public Max<double>[] Max_SSDS;
 
 
         #endregion
@@ -283,15 +307,21 @@ namespace Model_Lab
             Shops = new Shop[N];
             #endregion
 
-
             #region Инициализация переменных состояния модели
             for (int i = 0; i < N; i++)
-            {
-                VTT [i] = InitModelObject<TIntVar> ("Текущий объем товара в(во) " + i + "-ом магазине ");
-                SVP [i] = InitModelObject<TIntVar> ("Суммарный объем пролежанного товара в(во) " + i + "-ом магазине ");
-                SVNS[i] = InitModelObject<TIntVar> ("Суммарный объем неудовлетворенного спроса в(во) " + i + "-ом магазине ");
+
+            {   //"Ссылка на объект не указывает на экземпляр объекта (ниже)"
+                Shops[i].ProductAmountCurrent = InitModelObject<TIntVar>("Текущий объем товара в(во) " + i + "-ом магазине ");
+                Shops[i].ProductUnrealizedCurrent = InitModelObject<TRealVar>("Суммарный объем пролежанного товара в(во) " + i + "-ом магазине ");
+                Shops[i].ProductUnmetDemandCurrent = InitModelObject<TIntVar>("Суммарный объем неудовлетворенного спроса в(во) " + i + "-ом магазине ");
                 Flag[i] = InitModelObject<TBoolVar>("Идентификатор подачи заявки в(во) " + i + "-ом магазине ");
-                SKZ [i] = InitModelObject<TIntVar> ("Суммарное количество поданных заявок на пополнение товара  в(во) " + i + "-ом магазине ");
+                SKZ[i] = InitModelObject<TIntVar>("Суммарное количество поданных заявок на пополнение товара  в(во) " + i + "-ом магазине ");
+
+                //VTT [i] = InitModelObject<TIntVar> ("Текущий объем товара в(во) " + i + "-ом магазине ");
+                //SVP [i] = InitModelObject<TIntVar> ("Суммарный объем пролежанного товара в(во) " + i + "-ом магазине ");
+                //SVNS[i] = InitModelObject<TIntVar> ("Суммарный объем неудовлетворенного спроса в(во) " + i + "-ом магазине ");
+                //Flag[i] = InitModelObject<TBoolVar>("Идентификатор подачи заявки в(во) " + i + "-ом магазине ");
+                //SKZ [i] = InitModelObject<TIntVar> ("Суммарное количество поданных заявок на пополнение товара  в(во) " + i + "-ом магазине ");
             }
 
 
@@ -331,22 +361,25 @@ namespace Model_Lab
             #region Инициализация сборщиков статистики и подключение их к переменным
 
             //хранение пролеживаемого товара
-            Variance_SDP_PP = InitModelObject<Variance<double>>("Сборщик статистики: средние дневные потери от пролеживания товара в i-том магазине");
-            Variance_SDP_PP.ConnectOnSet(PP);//TODO: что с этим (и еще в остальных двух вариантах) делать
-            Max_SDP_PP = InitModelObjectArray<Max<double>>(2,"Максимум потерь от пролеживания товара в i-том магазине");//TODO: макс и мин для каждого верно?
-            Min_SDP_PP = InitModelObjectArray<Min<double>>(2,"Минимум потерь от пролеживания товара в i-том магазине" );
+            Variance_SDP_PP = InitModelObjectArray<Variance<double>>(N, "Сборщик статистики: средние дневные потери от пролеживания товара в i-том магазине");
+            Variance_SDP_PP[0].ConnectOnSet(Shops[0].ProductUnrealizedCurrent);
+            Variance_SDP_PP[1].ConnectOnSet(Shops[1].ProductUnrealizedCurrent);
+            Max_SDP_PP = InitModelObjectArray<Max<double>>(N,"Максимум потерь от пролеживания товара в i-том магазине");
+            Min_SDP_PP = InitModelObjectArray<Min<double>>(N,"Минимум потерь от пролеживания товара в i-том магазине" );
 
             //нереализуемая прибыль от неудовлетворенного спроса
-            Variance_SDP_PNP = InitModelObject<Variance<double>>("Сборщик статистики: средние дневные потери от неудовлетворенного спроса в i-том магазине");
-            Variance_SDP_PNP.ConnectOnSet(PNP);
-            Max_SDP_PNP = InitModelObjectArray<Max<double>>(2, "Максимум потерь от нереализуемой прибыли в i-том магазине");
-            Min_SDP_PNP = InitModelObjectArray<Min<double>>(2, "Минимум потерь от нереализуемой прибыли в i-том магазине" );
+            Variance_SDP_PNP = InitModelObjectArray<Variance<int>>(N, "Сборщик статистики: средние дневные потери от неудовлетворенного спроса в i-том магазине");
+            Variance_SDP_PNP[0].ConnectOnSet(Shops[0].ProductUnmetDemandCurrent);
+            Variance_SDP_PNP[1].ConnectOnSet(Shops[1].ProductUnmetDemandCurrent);
+            Max_SDP_PNP = InitModelObjectArray<Max<double>>(N, "Максимум потерь от нереализуемой прибыли в i-том магазине");
+            Min_SDP_PNP = InitModelObjectArray<Min<double>>(N, "Минимум потерь от нереализуемой прибыли в i-том магазине" );
 
             //потери от подачи заявок
-            Variance_SDP_PPZ = InitModelObject<Variance<int>>("Сборщик статистики: средние дневные потери от подачи заявок в i-том магазине");
-            Variance_SDP_PPZ.ConnectOnSet(PPZ);
-            Max_SDP_PPZ = InitModelObjectArray<Max<double>>(2, "Максимум потерь от подачи заявок в i-том магазине");
-            Min_SDP_PPZ = InitModelObjectArray<Min<double>>(2, "Минимум потерь от подачи заявок в i-том магазине" );
+            Variance_SDP_PPZ = InitModelObjectArray<Variance<double>>(N, "Сборщик статистики: средние дневные потери от подачи заявок в i-том магазине");
+            Variance_SDP_PPZ[0].ConnectOnSet(Shops[0].ProductLossRequestCurrent); //TODO: ProductLossRequestCurrent?
+            Variance_SDP_PPZ[1].ConnectOnSet(Shops[1].ProductLossRequestCurrent); 
+            Max_SDP_PPZ = InitModelObjectArray<Max<double>>(N, "Максимум потерь от подачи заявок в i-том магазине");
+            Min_SDP_PPZ = InitModelObjectArray<Min<double>>(N, "Минимум потерь от подачи заявок в i-том магазине" );
 
             // суммарные средние дневные потери торговой системы
             Variance_SSDS = InitModelObject<Variance<double>>("Сборщик статистики: суммарные средние дневные потери торговой системы");

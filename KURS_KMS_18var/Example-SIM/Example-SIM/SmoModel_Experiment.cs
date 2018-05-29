@@ -1,7 +1,6 @@
 using CommonModel.Kernel;
 using CommonModel.RandomStreamProducing;
 using CommonModel.StatisticsCollecting;
-using System;
 
 namespace Model_Lab
 {
@@ -46,17 +45,15 @@ namespace Model_Lab
         {
             #region Параметры модели
 
-            TV = 60;
+            TV = 30;
             VV = 100;
-            PP = 3.50;
-            PNP = 7.98;
-            PPZ = 2.34;
-            TF = 7;
+            //PP = 3.50;
+            //PNP = 7.98;
+            //PPZ = 2.34;
             TP = 14400000;
+            TF = TP*30;
 
             #endregion
-
-
 
             #region Установка параметров законов распределения
 
@@ -79,10 +76,10 @@ namespace Model_Lab
                                         
             for (int i=0; i<N; i++)
             {
-                Shops[i].ProductAmountCurrent.Value = VV;   // начальный объем товара в i-том магазине
-                Shops[i].ProductDemandCurrent.Value = 0;    // начальный объем спроса на товар в i-том магазине
-                SVP[i].Value = 0;
-                SVNS[i].Value = 0;
+                Shops[i].ProductAmountCurrent.Value = VV;           // начальный объем товара в i-том магазине
+                Shops[i].ProductDemandCurrent.Value = 0;            // начальный объем спроса на товар в i-том магазине
+                Shops[i].ProductUnrealizedCurrent.Value = 0;         // начальный объем пролежанного товара в i-том магазине
+                Shops[i].ProductUnmetDemandCurrent.Value = 0;    // начальный объем неудовлетворенного спроса на товар в i-том магазине
                 SKZ[i].Value = 0;
                 Flag[i].Value = false;
                 
@@ -96,10 +93,18 @@ namespace Model_Lab
                 collector.ResetCollector();
 
             //Печать заголовка строки состояния модели
-            TraceModel();
+            var DayNumber = 0;
+            TraceModel(DayNumber);
 
             //Планирование начальных событий
-
+            var k1Event = new K1()
+            {
+                DayNumber = DayNumber
+            };
+            PlanEvent(k1Event, DayNumber);
+            // Занесение в файл трассировки записи о запланированном событии
+            Tracer.PlanEventTrace(k1Event,
+                                  DayNumber);
 
             #endregion
 
@@ -120,32 +125,39 @@ namespace Model_Lab
             for (int i=0; i<N; i++)
             {
 
-                Tracer.TraceOut("Средние дневные потери от пролеживания товара в  " + i + "- ом магазине: " + (SVP[i].Value * PP / Time));
-                Tracer.TraceOut("Средние дневные потери от неудовлетворенного спроса в  " + i + "-ом магазине: " + (SVNS[i].Value * PNP / Time));
+                Tracer.TraceOut("Средние дневные потери от пролеживания товара в  " + i + "- ом магазине: " + (Shops[i].ProductUnrealizedCurrent.Value * PP / Time));
+                Tracer.TraceOut("Средние дневные потери от неудовлетворенного спроса в  " + i + "-ом магазине: " + (Shops[i].ProductUnmetDemandCurrent.Value * PNP / Time));
                 Tracer.TraceOut("Средние дневные потери от подачи заявок в " + i + "-ом магазине: " + (SKZ[i].Value * PPZ / Time));
 
             }
-            Tracer.TraceOut("Суммарные дневные потери торговой системы: " + ((SVP[0].Value  * PP  / Time) + (SVP[1].Value  * PP  / Time) +
-                                                                             (SVNS[0].Value * PNP / Time) + (SVNS[1].Value * PNP / Time) +
-                                                                             (SKZ[0].Value  * PPZ / Time) + (SKZ[1].Value  * PPZ / Time))) ;
+            
+            Tracer.TraceOut("Суммарные дневные потери торговой системы: "  + ((Shops[0].ProductUnrealizedCurrent.Value  * PP  / Time)+ (Shops[1].ProductUnrealizedCurrent.Value  * PP  / Time) 
+                                                                           + (Shops[0].ProductUnmetDemandCurrent.Value * PNP / Time)+ (Shops[1].ProductUnmetDemandCurrent.Value * PNP / Time)
+                                                                           + (SKZ[1].Value  * PPZ / Time) + (SKZ[1].Value  * PPZ / Time))) ;
 
         }
 
 
-        //Печать строки состояния
-        void TraceModel()
+        /// <summary>
+        /// Печать строки состояния.
+        /// </summary>
+        void TraceModel(int dayNumber)
         {
-            Tracer.TraceOut("VTT[0].Value: " + VTT[0].Value + "VTT[1].Value: " + VTT[1].Value);
+            Tracer.TraceOut("==============================================================");
 
-            Tracer.TraceOut("SVP[0].Value: " + SVP[0].Value + "SVP[1].Value: " + SVP[1].Value);
+            Tracer.TraceOut("Номер дня: " + dayNumber);
 
-            Tracer.TraceOut("SVNS[0].Value: " + SVNS[0].Value + "SVNS[1].Value: " + SVNS[1].Value);
+            Tracer.TraceOut("Текущий объем товара в первом магазине: " + Shops[0].ProductAmountCurrent.Value + "во втором магазине: " + Shops[1].ProductAmountCurrent.Value);
 
-            Tracer.TraceOut("SVST.Value: " + SVST.Value);
+            Tracer.TraceOut("Текущий объем пролёжанного товара: " + Shops[0].ProductUnrealizedCurrent.Value + "во втором магазине: " + Shops[1].ProductUnrealizedCurrent.Value);
 
-            Tracer.TraceOut("Flag[0].Value: " + Flag[0].Value + "Flag[1].Value: " + Flag[1].Value); // TОDO: как вывести дни? (см. описание переменной Flag)
+            Tracer.TraceOut("Суммарный объем неудовлетворенного спроса в первом магазине: " + Shops[0].ProductUnmetDemandCurrent.Value + "во втором магазине: " + Shops[1].ProductUnmetDemandCurrent.Value);
 
-            Tracer.TraceOut("SKZ[0].Value: " + SKZ[0].Value + "SKZ[1].Value: " + SKZ[1].Value);
+            Tracer.TraceOut("Cуммарный объем спроса за день: " + SVST.Value);
+
+            Tracer.TraceOut("Была ли подана заявка в первом магазине: " + Flag[0].Value + "во втором магазине: " + Flag[1].Value);
+
+            Tracer.TraceOut("Суммарное количество поданных заявок в первом магазине: " + SKZ[0].Value + "во втором магазине: " + SKZ[1].Value);
 
             Tracer.TraceOut("==============================================================");
         }
