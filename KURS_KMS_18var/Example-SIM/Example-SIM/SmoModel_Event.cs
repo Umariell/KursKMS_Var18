@@ -19,24 +19,25 @@ namespace Model_Lab
             // Алгоритм обработки события            
             protected override void HandleEvent(ModelEventArgs args)
             {
-                Model.TraceModel(DayNumber);
+                //Model.TraceModel(DayNumber);
 
                 for (int i = 0; i < N; i++)
                 {
+                    Model.Shops[i].ProductDemandCurrent.Value = (int)Model.NormalGenerator_VDS1.GenerateValue();
                     // Записать объем товара за i-тый день в соответствующий список у магазина
-                    Model.Shops[i].ProductAmountAll.Add(Model.Shops[i].ProductAmountCurrent);
+                    //Model.Shops[i].ProductAmountAll.Add(Model.Shops[i].ProductAmountCurrent);
 
                     // Записать объем спроса за i-тый день в соответствующий список у магазина
-                    Model.Shops[i].ProductDemandAll.Add(Model.Shops[i].ProductDemandCurrent);
+                    //Model.Shops[i].ProductDemandAll.Add(Model.Shops[i].ProductDemandCurrent);
 
                     // Записать объем неудовлетворенного спроса за i-тый день в соответствующий список у магазина
-                    Model.Shops[i].ProductUnmetDemandAll.Add(Model.Shops[i].ProductUnmetDemandCurrent);
+                    //Model.Shops[i].ProductUnmetDemandAll.Add(Model.Shops[i].ProductUnmetDemandCurrent);
 
                     // Записать объем пролежанного товара за i-тый день в соответствующий список у магазина
-                    Model.Shops[i].ProductUnrealizedAll.Add(Model.Shops[i].ProductUnrealizedCurrent);
+                    //Model.Shops[i].ProductUnrealizedAll.Add(Model.Shops[i].ProductUnrealizedCurrent);
 
                     // Записать объем потерь от подачи заявки за i-тый день в соответствующий список у магазина
-                    Model.Shops[i].ProductLossRequestAll.Add(Model.Shops[i].ProductLossRequestCurrent);
+                    //Model.Shops[i].ProductLossRequestAll.Add(Model.Shops[i].ProductLossRequestCurrent);
 
                     // Если спрос превысил текущий объем товара в магазине
                     if (Model.Shops[i].ProductAmountCurrent.Value < Model.Shops[i].ProductDemandCurrent.Value)
@@ -45,15 +46,13 @@ namespace Model_Lab
 
                         //неудовлетворенный спрос
                         Model.Shops[i].ProductUnmetDemandCurrent.Value = Math.Abs(Model.Shops[i].ProductDemandCurrent.Value - Model.Shops[i].ProductAmountCurrent.Value);
-                        Model.Shops[i].ProductUnmetDemandAll.Add(Model.Shops[i].ProductUnmetDemandCurrent);
+                        //Model.Shops[i].ProductUnmetDemandAll.Add(Model.Shops[i].ProductUnmetDemandCurrent);
 
-                        //пролежанный товар
-                        Model.Shops[i].ProductUnrealizedCurrent.Value = Math.Abs(Model.Shops[i].ProductAmountCurrent.Value - Model.Shops[i].ProductDemandCurrent.Value);
-                        Model.Shops[i].ProductUnrealizedAll.Add(Model.Shops[i].ProductUnrealizedCurrent);// TODO: выходит, что он высчитывается так же, как неуд.спрос и по сути равен ему?
+                        //Model.Shops[i].ProductUnrealizedAll.Add(Model.Shops[i].ProductUnrealizedCurrent);// TODO: выходит, что он высчитывается так же, как неуд.спрос и по сути равен ему?
 
                         //объем потерь от подачи заявки
                         Model.Shops[i].ProductLossRequestCurrent.Value = Math.Abs(Model.Shops[i].ProductDemandCurrent.Value - Model.Shops[i].ProductAmountCurrent.Value);
-                        Model.Shops[i].ProductLossRequestAll.Add(Model.Shops[i].ProductLossRequestCurrent);
+                        //Model.Shops[i].ProductLossRequestAll.Add(Model.Shops[i].ProductLossRequestCurrent);
 
                         // Планирование события 1 - появление заявки в СМО
                         // Задание интервала времени (для каждого магазина) через который наступит событие
@@ -65,6 +64,8 @@ namespace Model_Lab
                         {
                             ShopNumber = i
                         };
+                        Model.Shops[i].HasSendRequest.Value = true;
+                        Model.Shops[i].RequestsTotalCount.Value++;
                         Model.PlanEvent(k2Event, DayNumber + deltaTime);
                         // Занесение в файл трассировки записи о запланированном событии
                         Model.Tracer.PlanEventTrace(k2Event,
@@ -75,23 +76,29 @@ namespace Model_Lab
                         // Если спрос меньше текущего объема товара, то вычитаем из объема товара объем спроса
                         Model.Shops[i].ProductAmountCurrent.Value -= Model.Shops[i].ProductDemandCurrent.Value;
 
+                    //пролежанный товар
+                    Model.Shops[i].ProductUnrealizedCurrent.Value = Math.Abs(Model.Shops[i].ProductAmountCurrent.Value - Model.Shops[i].ProductDemandCurrent.Value);
+
                     // Считаем убытки от пролёжанного товара за текущий день в магазине
                     Model.Shops[i].ProductUnrealizedCurrent.Value = Model.Shops[i].ProductAmountCurrent.Value * Model.PP;
-                    Model.Shops[i].ProductUnrealizedAll.Add(Model.Shops[i].ProductUnrealizedCurrent);
+                    //Model.Shops[i].ProductUnrealizedAll.Add(Model.Shops[i].ProductUnrealizedCurrent);
 
                     // Увеличиваем текущий суммарный объем спроса на товар
                     Model.SVST.Value += Model.Shops[i].ProductDemandCurrent.Value;
 
                     // Генерируем спрос в магазине на следующий день
                     Model.Shops[i].ProductDemandCurrent.Value = (int)Model.NormalGenerator_VDS1.GenerateValue();
-                    Model.Shops[i].ProductDemandAll.Add(Model.Shops[i].ProductDemandCurrent);
+                    //Model.Shops[i].ProductDemandAll.Add(Model.Shops[i].ProductDemandCurrent);
 
                     Model.TraceModel(DayNumber);
                 }
                 Model.SVSTP.Value += Model.SVST.Value;
                 Model.SVST.Value = 0;
 
+                //Model.Time++;
                 //Планирование следующего события окончания рабочего дня
+                ++DayNumber;
+                Model.Day++;
                 var k1Event = new K1()
                 {
                     DayNumber = DayNumber
@@ -126,11 +133,13 @@ namespace Model_Lab
             {
                 // Запланировать поставку товара в магазин с номером ShopNumber
                 Model.Shops[ShopNumber].SupplyAmountLast.Value = Model.VV;
-                Model.Shops[ShopNumber].SupplyAmountAll.Add(Model.Shops[ShopNumber].SupplyAmountLast);
+                Model.Shops[ShopNumber].ProductAmountCurrent.Value += Model.VV;
+                Model.Shops[ShopNumber].HasSendRequest.Value = false;
+                //Model.Shops[ShopNumber].SupplyAmountAll.Add(Model.Shops[ShopNumber].SupplyAmountLast);
 
                 // TODO: пересчитать еще значения для магазина (мо, сигма, объем товара и т.д.)
                 // TODO: вывести состояние модели
-                Model.TraceModel(DayOfSupply);
+                //Model.TraceModel(DayOfSupply);
             }
         }
 
@@ -148,6 +157,5 @@ namespace Model_Lab
 
             }
         }
-
     }
 }

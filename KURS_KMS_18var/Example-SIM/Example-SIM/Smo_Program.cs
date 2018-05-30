@@ -22,6 +22,7 @@ namespace Model_Lab
 
             //сохраняем трассировку в файл
             smoModel.Tracer.OutStream.Flush();
+            Console.ReadLine();
         }
     }
 }

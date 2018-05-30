@@ -7,3 +7,10 @@ C:\Users\User\Documents\GitHub\KursKMS_Var18\KURS_KMS_18var\Example-SIM\Example-
 C:\Users\User\Documents\GitHub\KursKMS_Var18\KURS_KMS_18var\Example-SIM\Example-SIM\obj\Debug\KursKMS_Var18.csproj.CoreCompileInputs.cache
 C:\Users\User\Documents\GitHub\KursKMS_Var18\KURS_KMS_18var\Example-SIM\Example-SIM\obj\Debug\Example-SIM.exe
 C:\Users\User\Documents\GitHub\KursKMS_Var18\KURS_KMS_18var\Example-SIM\Example-SIM\obj\Debug\Example-SIM.pdb
+D:\Programs\KMS_Kurs_Vasina\KURS_KMS_18var\Example-SIM\Example-SIM\bin\Debug\Example-SIM.exe.config
+D:\Programs\KMS_Kurs_Vasina\KURS_KMS_18var\Example-SIM\Example-SIM\obj\Debug\Example-SIM.exe
+D:\Programs\KMS_Kurs_Vasina\KURS_KMS_18var\Example-SIM\Example-SIM\obj\Debug\Example-SIM.pdb
+D:\Programs\KMS_Kurs_Vasina\KURS_KMS_18var\Example-SIM\Example-SIM\bin\Debug\Example-SIM.exe
+D:\Programs\KMS_Kurs_Vasina\KURS_KMS_18var\Example-SIM\Example-SIM\bin\Debug\Example-SIM.pdb
+D:\Programs\KMS_Kurs_Vasina\KURS_KMS_18var\Example-SIM\Example-SIM\bin\Debug\PSS.dll
+D:\Programs\KMS_Kurs_Vasina\KURS_KMS_18var\Example-SIM\Example-SIM\obj\Debug\KursKMS_Var18.csprojResolveAssemblyReference.cache

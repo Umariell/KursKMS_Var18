@@ -4,7 +4,6 @@ using CommonModel.StatisticsCollecting;
 
 namespace Model_Lab
 {
-
     public partial class SmoModel : Model
     {
         /// <summary>
@@ -15,7 +14,7 @@ namespace Model_Lab
         /// <returns></returns>
         public override bool MustStopRun(int variantCount, int runCount)
         {
-            return Time > TP;
+            return Day > M + 1;
         }
 
         /// <summary>
@@ -40,18 +39,24 @@ namespace Model_Lab
             return runCount < 1;
         }
 
-        //Задание начального состояния модели для нового варианта модели
+        /// <summary>
+        /// Задание начального состояния модели для нового варианта модели
+        /// </summary>
+        /// <param name="variantCount"></param>
         public override void SetNextVariant(int variantCount)
         {
+            // TODO: вся инициализация с цифрами только здесь
             #region Параметры модели
 
             TV = 30;
-            VV = 100;
-            //PP = 3.50;
+            VV = 40;
+            PP = 4;
             //PNP = 7.98;
             //PPZ = 2.34;
-            TP = 14400000;
-            TF = TP*30;
+            TP = 7;
+            TF = TP * 30;
+
+            Day = 1;
 
             #endregion
 
@@ -59,8 +64,30 @@ namespace Model_Lab
 
             int seed = 1;   //System.DateTime.Now.Second * System.DateTime.Now.Millisecond;
 
-            (NormalGenerator_VDS1.BPN as GeneratedBaseRandomStream).Seed    = 54 * seed;
-            (NormalGenerator_VDS2.BPN as GeneratedBaseRandomStream).Seed    = 89 * seed;
+            ZR_TV_ValueGenerator1.Table.Add(0, 0.000);
+            ZR_TV_ValueGenerator1.Table.Add(1, 0.500);
+            ZR_TV_ValueGenerator1.Table.Add(2, 0.604);
+            ZR_TV_ValueGenerator1.Table.Add(3, 0.710);
+            ZR_TV_ValueGenerator1.Table.Add(4, 0.886);
+            ZR_TV_ValueGenerator1.Table.Add(5, 0.900);
+            ZR_TV_ValueGenerator1.Table.Add(6, 1.000);
+
+            ZR_TV_ValueGenerator2.Table.Add(0, 0.180);
+            ZR_TV_ValueGenerator2.Table.Add(1, 0.209);
+            ZR_TV_ValueGenerator2.Table.Add(2, 0.401);
+            ZR_TV_ValueGenerator2.Table.Add(3, 0.710);
+            ZR_TV_ValueGenerator2.Table.Add(4, 0.800);
+            ZR_TV_ValueGenerator2.Table.Add(5, 0.900);
+            ZR_TV_ValueGenerator2.Table.Add(6, 1.000);
+
+            // TODO: параметры генераторов!
+            NormalGenerator_VDS1.Mx = 25;
+            NormalGenerator_VDS1.Sigma = 4;
+            NormalGenerator_VDS2.Mx = 21;
+            NormalGenerator_VDS2.Sigma = 7;
+
+            (NormalGenerator_VDS1.BPN as GeneratedBaseRandomStream).Seed = 54 * seed;
+            (NormalGenerator_VDS2.BPN as GeneratedBaseRandomStream).Seed = 89 * seed;
             (UniformGenerator_TVost1.BPN as GeneratedBaseRandomStream).Seed = 51 * seed;
             (UniformGenerator_TVost2.BPN as GeneratedBaseRandomStream).Seed = 16 * seed;
 
@@ -71,21 +98,20 @@ namespace Model_Lab
 
         public override void StartModelling(int variantCount, int runCount)
         {
-
             //Задание начальных значений модельных переменных и объектов
-                                        
-            for (int i=0; i<N; i++)
+            for (int i = 0; i < N; i++)
             {
                 Shops[i].ProductAmountCurrent.Value = VV;           // начальный объем товара в i-том магазине
                 Shops[i].ProductDemandCurrent.Value = 0;            // начальный объем спроса на товар в i-том магазине
+                Shops[i].ProductLossRequestCurrent.Value = 0;            // 
                 Shops[i].ProductUnrealizedCurrent.Value = 0;         // начальный объем пролежанного товара в i-том магазине
                 Shops[i].ProductUnmetDemandCurrent.Value = 0;    // начальный объем неудовлетворенного спроса на товар в i-том магазине
-                SKZ[i].Value = 0;
-                Flag[i].Value = false;
-                
+                Shops[i].HasSendRequest.Value = false;
+                Shops[i].RequestsTotalCount.Value = 0;
+
             }
             SVST.Value = 0;
-           
+            SVSTP.Value = 0;
 
             // Cброс сборщиков статистики
 
@@ -103,12 +129,8 @@ namespace Model_Lab
             };
             PlanEvent(k1Event, DayNumber);
             // Занесение в файл трассировки записи о запланированном событии
-            Tracer.PlanEventTrace(k1Event,
-                                  DayNumber);
-
+            Tracer.PlanEventTrace(k1Event, DayNumber);
             #endregion
-
-
         }
 
         //Действия по окончанию прогона
@@ -120,21 +142,19 @@ namespace Model_Lab
             Tracer.TraceOut("==============================================================");
             Tracer.AnyTrace("");
             Tracer.TraceOut("Время моделирования: " + string.Format("{0:0.00}", Time));
-            
 
-            for (int i=0; i<N; i++)
+            for (int i = 0; i < N; i++)
             {
-
-                Tracer.TraceOut("Средние дневные потери от пролеживания товара в  " + i + "- ом магазине: " + (Shops[i].ProductUnrealizedCurrent.Value * PP / Time));
-                Tracer.TraceOut("Средние дневные потери от неудовлетворенного спроса в  " + i + "-ом магазине: " + (Shops[i].ProductUnmetDemandCurrent.Value * PNP / Time));
-                Tracer.TraceOut("Средние дневные потери от подачи заявок в " + i + "-ом магазине: " + (SKZ[i].Value * PPZ / Time));
-
+                // TODO: вывести суммарные потери магазина, а не средние.
+                Tracer.TraceOut("Средние дневные потери от пролеживания товара в  " + i + "- ом магазине: " + (Shops[i].ProductUnrealizedCurrent.Value * PP / M));
+                Tracer.TraceOut("Средние дневные потери от неудовлетворенного спроса в  " + i + "-ом магазине: " + (Shops[i].ProductUnmetDemandCurrent.Value * PNP / M));
+                //Tracer.TraceOut("Средние дневные потери от подачи заявок в " + i + "-ом магазине: " + (SKZ[i].Value * PPZ / M));
             }
-            
-            Tracer.TraceOut("Суммарные дневные потери торговой системы: "  + ((Shops[0].ProductUnrealizedCurrent.Value  * PP  / Time)+ (Shops[1].ProductUnrealizedCurrent.Value  * PP  / Time) 
-                                                                           + (Shops[0].ProductUnmetDemandCurrent.Value * PNP / Time)+ (Shops[1].ProductUnmetDemandCurrent.Value * PNP / Time)
-                                                                           + (SKZ[1].Value  * PPZ / Time) + (SKZ[1].Value  * PPZ / Time))) ;
+            // TODO: вывести суммарные потери обоих магазинов
 
+            Tracer.TraceOut("Суммарные дневные потери торговой системы: " + ((Shops[0].ProductUnrealizedCurrent.Value * PP / M) + (Shops[1].ProductUnrealizedCurrent.Value * PP / M)
+                                                                           + (Shops[0].ProductUnmetDemandCurrent.Value * PNP / M) + (Shops[1].ProductUnmetDemandCurrent.Value * PNP / M)
+                                                                           + (Shops[0].RequestsTotalCount.Value * PPZ / M) + (Shops[1].RequestsTotalCount.Value * PPZ / M)));
         }
 
 
@@ -144,23 +164,15 @@ namespace Model_Lab
         void TraceModel(int dayNumber)
         {
             Tracer.TraceOut("==============================================================");
-
             Tracer.TraceOut("Номер дня: " + dayNumber);
-
-            Tracer.TraceOut("Текущий объем товара в первом магазине: " + Shops[0].ProductAmountCurrent.Value + "во втором магазине: " + Shops[1].ProductAmountCurrent.Value);
-
-            Tracer.TraceOut("Текущий объем пролёжанного товара: " + Shops[0].ProductUnrealizedCurrent.Value + "во втором магазине: " + Shops[1].ProductUnrealizedCurrent.Value);
-
-            Tracer.TraceOut("Суммарный объем неудовлетворенного спроса в первом магазине: " + Shops[0].ProductUnmetDemandCurrent.Value + "во втором магазине: " + Shops[1].ProductUnmetDemandCurrent.Value);
-
+            Tracer.TraceOut("Текущий объем товара в первом магазине: " + Shops[0].ProductAmountCurrent.Value + "; во втором магазине: " + Shops[1].ProductAmountCurrent.Value);
+            Tracer.TraceOut("Текущий объем пролёжанного товара: " + Shops[0].ProductUnrealizedCurrent.Value + "; во втором магазине: " + Shops[1].ProductUnrealizedCurrent.Value);
+            // TODO: спрос в магазине!
+            Tracer.TraceOut("Суммарный объем неудовлетворенного спроса в первом магазине: " + Shops[0].ProductUnmetDemandCurrent.Value + "; во втором магазине: " + Shops[1].ProductUnmetDemandCurrent.Value);
             Tracer.TraceOut("Cуммарный объем спроса за день: " + SVST.Value);
-
-            Tracer.TraceOut("Была ли подана заявка в первом магазине: " + Flag[0].Value + "во втором магазине: " + Flag[1].Value);
-
-            Tracer.TraceOut("Суммарное количество поданных заявок в первом магазине: " + SKZ[0].Value + "во втором магазине: " + SKZ[1].Value);
-
+            Tracer.TraceOut("Была ли подана заявка в первом магазине: " + Shops[0].HasSendRequest.Value + "; во втором магазине: " + Shops[1].HasSendRequest.Value);
+            Tracer.TraceOut("Суммарное количество поданных заявок в первом магазине: " + Shops[0].RequestsTotalCount.Value + "; во втором магазине: " + Shops[1].RequestsTotalCount.Value);
             Tracer.TraceOut("==============================================================");
         }
-
     }
 }
