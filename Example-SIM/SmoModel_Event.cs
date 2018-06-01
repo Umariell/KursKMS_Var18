@@ -12,6 +12,9 @@ namespace Model_Lab
         {
             #region Атрибуты события
 
+            /// <summary>
+            /// Номер текущего дня
+            /// </summary>
             public int DayNumber { get; set; }
 
             #endregion
@@ -19,7 +22,7 @@ namespace Model_Lab
             // Алгоритм обработки события            
             protected override void HandleEvent(ModelEventArgs args)
             {
-                //Model.TraceModel(DayNumber);
+                Model.TraceModel(DayNumber);
 
                 for (int i = 0; i < N; i++)
                 {
@@ -43,6 +46,7 @@ namespace Model_Lab
                         var k2Event = new K2();
                         k2Event.ShopNumber = i;
                         k2Event.DayOfSupply = DayNumber;
+                        //k2Event.DayOfSupply = DayNumber + (int)deltaTime; 
                         Model.Shops[i].HasSendRequest.Value = true;
                         Model.Shops[i].RequestsTotalCount.Value++;
                         Model.PlanEvent(k2Event, DayNumber + deltaTime);
@@ -54,6 +58,7 @@ namespace Model_Lab
                         //Model.Shops[i].HasSendRequest.Value = true;
                         //Model.Shops[i].RequestsTotalCount.Value++;
                         //Model.PlanEvent(k2Event, DayNumber + deltaTime);
+
                         // Занесение в файл трассировки записи о запланированном событии
                         Model.Tracer.PlanEventTrace(k2Event,
                                                     Model.Time + deltaTime,
@@ -61,14 +66,18 @@ namespace Model_Lab
 
                     }
                     else
+                    {
                         // Если спрос меньше текущего объема товара, то вычитаем из объема товара объем спроса
                         Model.Shops[i].ProductAmountCurrent.Value -= Model.Shops[i].ProductDemandCurrent.Value;
 
-                    //пролежанный товар
-                    Model.Shops[i].ProductUnrealizedCurrent.Value = Math.Abs(Model.Shops[i].ProductAmountCurrent.Value - Model.Shops[i].ProductDemandCurrent.Value);
+                        //пролежанный товар
+                        //Model.Shops[i].ProductUnrealizedCurrent.Value = Math.Abs(Model.Shops[i].ProductAmountCurrent.Value - Model.Shops[i].ProductDemandCurrent.Value);
+                        Model.Shops[i].ProductUnrealizedCurrent.Value = Model.Shops[i].ProductAmountCurrent.Value; //TODO: разве, не этому значению будет равен пролежанный товар?
 
-                    // Считаем убытки от пролёжанного товара за текущий день в магазине
-                    Model.Shops[i].ProductUnrealizedCurrent.Value = Model.Shops[i].ProductAmountCurrent.Value * Model.PP;
+                        // Считаем убытки от пролёжанного товара за текущий день в магазине
+                        //Model.Shops[i].ProductUnrealizedCurrent.Value = Model.Shops[i].ProductAmountCurrent.Value * Model.PP;
+                    }
+
 
                     // Увеличиваем текущий суммарный объем спроса на товар
                     Model.SVST.Value += Model.Shops[i].ProductDemandCurrent.Value;
@@ -86,37 +95,37 @@ namespace Model_Lab
                 //Планирование следующего события окончания рабочего дня; НО!!!!
                 //если время кончилось, планируем событие 3
 
-                //Model.Day++;
-                //if (Model.Day < Model.TP)
-                //{
-                //    var k1Event = new K1()
-                //    {
-                //        DayNumber = Model.Day
-                //    };
-                //    Model.PlanEvent(k1Event, k1Event.DayNumber);
-                //    // Занесение в файл трассировки записи о запланированном событии
-                //    Model.Tracer.PlanEventTrace(k1Event,
-                //                          k1Event.DayNumber);
-                //}
-                //else
-                //{
-                //    var k3Event = new K3();
-                //    Model.PlanEvent(k3Event, Model.Day);
-                //    // Занесение в файл трассировки записи о запланированном событии
-                //    Model.Tracer.PlanEventTrace(k3Event,
-                //                          Model.Day);
-                //}
-
-                ++DayNumber;
                 Model.Day++;
-                var k1Event = new K1()
+                if (Model.Day < Model.TP)
                 {
-                    DayNumber = DayNumber
-                };
-                Model.PlanEvent(k1Event, DayNumber);
-                // Занесение в файл трассировки записи о запланированном событии
-                Model.Tracer.PlanEventTrace(k1Event,
-                                      DayNumber);
+                    var k1Event = new K1()
+                    {
+                        DayNumber = Model.Day
+                    };
+                    Model.PlanEvent(k1Event, k1Event.DayNumber);
+                    // Занесение в файл трассировки записи о запланированном событии
+                    Model.Tracer.PlanEventTrace(k1Event,
+                                          k1Event.DayNumber);
+                }
+                else
+                {
+                    var k3Event = new K3();
+                    Model.PlanEvent(k3Event, Model.Day);
+                    // Занесение в файл трассировки записи о запланированном событии
+                    Model.Tracer.PlanEventTrace(k3Event,
+                                          Model.Day);
+                }
+
+                //++DayNumber;
+                //Model.Day++;
+                //var k1Event = new K1()
+                //{
+                //    DayNumber = DayNumber
+                //};
+                //Model.PlanEvent(k1Event, DayNumber);
+                //// Занесение в файл трассировки записи о запланированном событии
+                //Model.Tracer.PlanEventTrace(k1Event,
+                //                      DayNumber);
             }
         }
 
@@ -131,7 +140,7 @@ namespace Model_Lab
             public int ShopNumber { get; set; }
 
             /// <summary>
-            /// День поставки товара со склада в магазин.
+            /// День подачи заявки из магазина в ОС
             /// </summary>
             public int DayOfSupply { get; set; }
 
@@ -144,8 +153,7 @@ namespace Model_Lab
                 Model.Shops[ShopNumber].SupplyAmountLast.Value = Model.VV;
                 Model.Shops[ShopNumber].ProductAmountCurrent.Value += Model.VV;
                 Model.Shops[ShopNumber].HasSendRequest.Value = false;
-                            
-                //Model.TraceRequest(DayOfSupply, ShopNumber);
+                Model.TraceRequest(DayOfSupply, ShopNumber);
             }
         }
 

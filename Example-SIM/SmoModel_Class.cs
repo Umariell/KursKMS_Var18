@@ -44,17 +44,17 @@ namespace Model_Lab
         /// <summary>
         /// потери от хранения пролежанной продукции(руб/ед.т.)
         /// </summary>
-        public double PP;
+        public int PP;
 
         /// <summary>
         /// потери от нереализуемой прибыли(руб/ед.т.)
         /// </summary>
-        public double PNP;
+        public int PNP;
 
         /// <summary>
         /// потери от подачи заявки на пополнение товарного запаса(руб/ед.т.)
         /// </summary>
-        public double PPZ;
+        public int PPZ;
 
         /// <summary>
         /// временной интервал сбора статистики по суммарному объему спроса с оптового склада(дн.)
@@ -78,7 +78,7 @@ namespace Model_Lab
         /// <summary>
         /// суммарное количество поданных заявок на пополнение товара в i-ом магазине
         /// </summary>
-        public TIntVar[] SKZ;
+        public int[] SKZ;
 
         /// <summary>
         /// текущий суммарный объем спроса на товар (за день)
@@ -91,9 +91,9 @@ namespace Model_Lab
         public TRealVar SVSTP;
 
         /// <summary>
-        /// Суммарное Количество НеРеализованного Товара
+        /// Суммарный объем нереализованного товара
         /// </summary>
-        public TIntVar SCNRT; 
+        public TIntVar SVP; 
 
         #endregion
 
@@ -279,17 +279,12 @@ namespace Model_Lab
                 Shops[i].ProductAmountCurrent = InitModelObject<TIntVar>("Текущий объем товара в(во) " + i + "-ом магазине ");
                 Shops[i].ProductDemandCurrent = InitModelObject<TIntVar>("Текущий объем спроса на товар в(во) " + i + "-ом магазине ");
                 Shops[i].ProductLossRequestCurrent = InitModelObject<TRealVar>("Текущий объем потерь от подачи заявки в(во) " + i + "-ом магазине ");
-                Shops[i].ProductUnrealizedCurrent = InitModelObject<TRealVar>("Суммарный объем пролежанного товара в(во) " + i + "-ом магазине ");
-                Shops[i].ProductUnmetDemandCurrent = InitModelObject<TIntVar>("Суммарный объем неудовлетворенного спроса в(во) " + i + "-ом магазине ");
+                Shops[i].ProductUnrealizedCurrent = InitModelObject<TRealVar>("Текущий объем пролежанного товара в(во) " + i + "-ом магазине ");
+                Shops[i].ProductUnmetDemandCurrent = InitModelObject<TIntVar>("Текущий объем неудовлетворенного спроса в(во) " + i + "-ом магазине ");
                 Shops[i].HasSendRequest = InitModelObject<TBoolVar>("Идентификатор подачи заявки в(во) " + i + "-ом магазине ");
                 Shops[i].RequestsTotalCount = InitModelObject<TIntVar>("Суммарное количество поданных заявок на пополнение товара  в(во) " + i + "-ом магазине ");
                 Shops[i].SupplyAmountLast = InitModelObject<TIntVar>("Объем последней поставки в(во) " + i + "-ом магазине ");
 
-                //VTT [i] = InitModelObject<TIntVar> ("Текущий объем товара в(во) " + i + "-ом магазине ");
-                //SVP [i] = InitModelObject<TIntVar> ("Суммарный объем пролежанного товара в(во) " + i + "-ом магазине ");
-                //SVNS[i] = InitModelObject<TIntVar> ("Суммарный объем неудовлетворенного спроса в(во) " + i + "-ом магазине ");
-                //Flag[i] = InitModelObject<TBoolVar>("Идентификатор подачи заявки в(во) " + i + "-ом магазине ");
-                //SKZ [i] = InitModelObject<TIntVar> ("Суммарное количество поданных заявок на пополнение товара  в(во) " + i + "-ом магазине ");
             }
 
             SVST = InitModelObject<TRealVar>("текущий суммарный объем спроса на товар (за день)");

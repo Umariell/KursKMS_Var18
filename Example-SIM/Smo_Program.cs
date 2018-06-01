@@ -7,7 +7,7 @@ namespace Model_Lab
         static void Main(string[] args)
         {
             //Создаем модель
-            var smoModel = new SmoModel(null, "Модель СМО");
+            var smoModel = new SmoModel(null, "Модель СМО - оптовый склад и магазины");
 
             try
             {
