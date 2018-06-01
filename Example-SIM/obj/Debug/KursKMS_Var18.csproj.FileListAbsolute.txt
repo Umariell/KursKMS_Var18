@@ -23,3 +23,11 @@ C:\Users\User\Desktop\KMS18\Example-SIM\obj\Debug\KursKMS_Var18.csproj.CopyCompl
 C:\Users\User\Desktop\KMS18\Example-SIM\obj\Debug\Example-SIM.exe
 C:\Users\User\Desktop\KMS18\Example-SIM\obj\Debug\Example-SIM.pdb
 C:\Users\User\Desktop\KMS18\Example-SIM\obj\Debug\KursKMS_Var18.csprojAssemblyReference.cache
+D:\Programs\KMS_Kurs_Vasina\Example-SIM\bin\Debug\Example-SIM.exe.config
+D:\Programs\KMS_Kurs_Vasina\Example-SIM\bin\Debug\Example-SIM.exe
+D:\Programs\KMS_Kurs_Vasina\Example-SIM\bin\Debug\Example-SIM.pdb
+D:\Programs\KMS_Kurs_Vasina\Example-SIM\bin\Debug\PSS.dll
+D:\Programs\KMS_Kurs_Vasina\Example-SIM\bin\Debug\PSS.xml
+D:\Programs\KMS_Kurs_Vasina\Example-SIM\obj\Debug\KursKMS_Var18.csprojResolveAssemblyReference.cache
+D:\Programs\KMS_Kurs_Vasina\Example-SIM\obj\Debug\Example-SIM.exe
+D:\Programs\KMS_Kurs_Vasina\Example-SIM\obj\Debug\Example-SIM.pdb

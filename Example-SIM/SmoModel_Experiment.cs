@@ -14,7 +14,7 @@ namespace Model_Lab
         /// <returns></returns>
         public override bool MustStopRun(int variantCount, int runCount)
         {
-            return Day > M-1;
+            return Day > M;
         }
 
         /// <summary>
@@ -84,10 +84,17 @@ namespace Model_Lab
             ZR_TV_ValueGenerator2.Table.Add(5, 0.900);
             ZR_TV_ValueGenerator2.Table.Add(6, 1.000);
 
-            NormalGenerator_VDS1.Mx     = 25;
-            NormalGenerator_VDS1.Sigma  = 4;
-            NormalGenerator_VDS2.Mx     = 21;
-            NormalGenerator_VDS2.Sigma  = 7;
+            // TODO: это старые значения генераторов
+            //NormalGenerator_VDS1.Mx     = 25;
+            //NormalGenerator_VDS1.Sigma  = 4;
+            //NormalGenerator_VDS2.Mx     = 21;
+            //NormalGenerator_VDS2.Sigma  = 7;
+
+            // TODO: а это новые, зависящие от Shops[i].Mx и Sigma
+            NormalGenerator_VDS1.Mx = Shops[0].Mx;
+            NormalGenerator_VDS1.Sigma = Shops[0].Sigma;
+            NormalGenerator_VDS2.Mx = Shops[1].Mx;
+            NormalGenerator_VDS2.Sigma = Shops[1].Sigma;
             NormalGenerator_PP_Loss.Mx = 20;
             NormalGenerator_PP_Loss.Sigma = 4;
 
@@ -127,7 +134,7 @@ namespace Model_Lab
             TraceModelHeader();
             //Печать заголовка строки состояния модели
             var DayNumber = 0;
-            TraceModel(DayNumber);
+            TraceModel(DayNumber++);
 
             //Планирование начальных событий
             var k1Event = new K1()
@@ -142,7 +149,9 @@ namespace Model_Lab
 
         //Действия по окончанию прогона
         public override void FinishModelling(int variantCount, int runCount)
-        {                    //TODO: не происходит сбор статистики! Как подключить сборщики статистики со своими min и max?
+        {
+            //TODO: не происходит сбор статистики! Как подключить сборщики статистики со своими min и max?
+            // TODO: А я не вижу здесь вывода Min и Max статистики. Выводи их явно из Max_SDP_PPZ и аналогичных сборщиков.
 
             Tracer.AnyTrace("");
             Tracer.TraceOut("==============================================================");
@@ -177,13 +186,19 @@ namespace Model_Lab
             Tracer.TraceOut("в первом магазине: " + (Shops[0].RequestsTotalCount.Value * PPZ / M) + "  во втором магазине: " + (Shops[1].RequestsTotalCount.Value * PPZ / M));
             Tracer.AnyTrace("");
 
-            Tracer.TraceOut("Суммарные средние дневные потери торговой системы за день: " + ((Shops[0].ProductUnrealizedCurrent.Value * PP / M) + (Shops[1].ProductUnrealizedCurrent.Value * PP / M)
-                                                                       + (Shops[0].ProductUnmetDemandCurrent.Value * PNP / M) + (Shops[1].ProductUnmetDemandCurrent.Value * PNP / M)
-+ (Shops[0].RequestsTotalCount.Value * PPZ / M) + (Shops[1].RequestsTotalCount.Value * PPZ / M)));
+            Tracer.TraceOut("Суммарные средние дневные потери торговой системы за день: " 
+                + ((Shops[0].ProductUnrealizedCurrent.Value * PP / M) 
+                + (Shops[1].ProductUnrealizedCurrent.Value * PP / M)
+                + (Shops[0].ProductUnmetDemandCurrent.Value * PNP / M)
+                + (Shops[1].ProductUnmetDemandCurrent.Value * PNP / M)
+                + (Shops[0].RequestsTotalCount.Value * PPZ / M)
+                + (Shops[1].RequestsTotalCount.Value * PPZ / M)));
 
         }
 
-        //Печать заголовка
+        /// <summary>
+        /// Печать заголовка
+        /// </summary>
         void TraceModelHeader()
         {
             Tracer.TraceOut("==============================================================");
@@ -216,6 +231,7 @@ namespace Model_Lab
             Tracer.TraceOut("==============================================================");
             Tracer.AnyTrace("");
         }
+
         /// <summary>
         /// Печать строки состояния.
         /// </summary>
@@ -231,8 +247,6 @@ namespace Model_Lab
             Tracer.TraceOut("Была ли подана заявка в первом магазине: " + Shops[0].HasSendRequest.Value + ";  во втором магазине: " + Shops[1].HasSendRequest.Value);
             Tracer.TraceOut("Количество поданных заявок в первом магазине: " + Shops[0].RequestsTotalCount.Value + ";  во втором магазине: " + Shops[1].RequestsTotalCount.Value);
             Tracer.TraceOut("==============================================================");
-
-
         }
 
         /// <summary>
@@ -243,8 +257,9 @@ namespace Model_Lab
             Tracer.TraceOut("==============================================================");
             Tracer.TraceOut("Номер дня подачи заявки: " + dayOfSupply);
             Tracer.TraceOut("из магазина " + (shopNumber + 1));
-            Tracer.TraceOut("Текущий объем товара в магазине: " + Shops[shopNumber].ProductAmountCurrent.Value); 
-            
+            Tracer.TraceOut("Текущий объем товара в магазине: " + Shops[shopNumber].ProductAmountCurrent.Value);
+            Tracer.TraceOut("Объем поставки (восстановления) товара в магазин: " + VV);
+
             Tracer.TraceOut("==============================================================");
         }
     }

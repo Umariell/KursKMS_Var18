@@ -33,7 +33,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="PSS">
-      <HintPath>..\PSS.dll</HintPath>
+      <HintPath>..\..\KMS\PSS.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
