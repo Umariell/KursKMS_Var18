@@ -147,11 +147,16 @@ namespace Model_Lab
             #endregion
         }
 
-        //Действия по окончанию прогона
+        /// <summary>
+        /// Действия по окончанию прогона
+        /// </summary>
+        /// <param name="variantCount"></param>
+        /// <param name="runCount"></param>
         public override void FinishModelling(int variantCount, int runCount)
         {
-            //TODO: не происходит сбор статистики! Как подключить сборщики статистики со своими min и max?
+            // TODO: не происходит сбор статистики! Как подключить сборщики статистики со своими min и max?
             // TODO: А я не вижу здесь вывода Min и Max статистики. Выводи их явно из Max_SDP_PPZ и аналогичных сборщиков.
+            // TODO: тестируй
 
             Tracer.AnyTrace("");
             Tracer.TraceOut("==============================================================");
@@ -160,11 +165,17 @@ namespace Model_Lab
             Tracer.AnyTrace("");
             // Tracer.TraceOut("Время моделирования: " + string.Format("{0:0.00}", Time));
 
+            Tracer.AnyTrace("Суммарныq объем спроса на товар");
+            Tracer.TraceOut("в первом магазине: " + (Shops[0].ProductDemandAll.Value) + "  во втором магазине: " + (Shops[1].ProductDemandAll.Value));
+            Tracer.AnyTrace("");
+            Tracer.AnyTrace("Суммарные количество пролежанного товара");
+            Tracer.TraceOut("в первом магазине: " + (Shops[0].ProductUnrealizedAll.Value) + "  во втором магазине: " + (Shops[1].ProductUnrealizedAll.Value));
+            Tracer.AnyTrace("");
             Tracer.AnyTrace("Суммарные дневные потери от пролеживания товара");
-            Tracer.TraceOut("в первом магазине: " + (Shops[0].ProductUnrealizedCurrent.Value * PP) + "  во втором магазине: " + (Shops[1].ProductUnrealizedCurrent.Value * PP));
+            Tracer.TraceOut("в первом магазине: " + (Shops[0].ProductUnrealizedAll.Value * PP) + "  во втором магазине: " + (Shops[1].ProductUnrealizedAll.Value * PP));
             Tracer.AnyTrace("");
             Tracer.AnyTrace("Суммарные дневные потери от неудовлетворенного спроса");
-            Tracer.TraceOut("в первом магазине: " + (Shops[0].ProductUnmetDemandCurrent.Value * PNP) + "  во втором магазине: " + (Shops[1].ProductUnmetDemandCurrent.Value * PNP));
+            Tracer.TraceOut("в первом магазине: " + (Shops[0].ProductUnmetDemandAll.Value * PNP) + "  во втором магазине: " + (Shops[1].ProductUnmetDemandAll.Value * PNP));
             Tracer.AnyTrace("");
             Tracer.AnyTrace("Суммарные дневные потери от подачи заявок");
             Tracer.TraceOut("в первом магазине: " + (Shops[0].RequestsTotalCount.Value * PPZ) + "  во втором магазине: " + (Shops[1].RequestsTotalCount.Value * PPZ));
@@ -173,27 +184,36 @@ namespace Model_Lab
             Tracer.TraceOut("Суммарные дневные потери торговой системы: " + ((Shops[0].ProductUnrealizedCurrent.Value * PP) + (Shops[1].ProductUnrealizedCurrent.Value * PP)
                                                                        + (Shops[0].ProductUnmetDemandCurrent.Value * PNP) + (Shops[1].ProductUnmetDemandCurrent.Value * PNP)
                                                                        + (Shops[0].RequestsTotalCount.Value * PPZ) + (Shops[1].RequestsTotalCount.Value * PPZ)));
+
             Tracer.AnyTrace("");
-            Tracer.TraceOut("==============================================================");
+            Tracer.TraceOut("=============================================================="); 
             Tracer.AnyTrace("");
             Tracer.AnyTrace("Средние дневные потери от пролеживания товара за день");
-            Tracer.TraceOut("в первом магазине: " + (Shops[0].ProductUnrealizedCurrent.Value * PP / M) + "  во втором магазине: " + (Shops[1].ProductUnrealizedCurrent.Value * PP / M));
+            Tracer.TraceOut("в первом магазине: " + Shops[0].ProductUnrealizedCurrent.Value * PP + "  во втором магазине: " + Shops[1].ProductUnrealizedCurrent.Value * PP);
+            Tracer.AnyTrace("Максимальные дневные потери от пролеживания товара за день");
+            Tracer.TraceOut("в первом магазине: " + Max_SDP_PP[0].Stat + "  во втором магазине: " + Max_SDP_PP[1].Stat);
+            Tracer.AnyTrace("Минимальные дневные потери от пролеживания товара за день");
+            Tracer.TraceOut("в первом магазине: " + Min_SDP_PP[0].Stat + "  во втором магазине: " + Min_SDP_PP[1].Stat);
             Tracer.AnyTrace("");
             Tracer.AnyTrace("Средние дневные потери от неудовлетворенного спроса за день");
             Tracer.TraceOut("в первом магазине: " + (Shops[0].ProductUnmetDemandCurrent.Value * PNP / M) + "  во втором магазине: " + (Shops[1].ProductUnmetDemandCurrent.Value * PNP / M));
+            Tracer.AnyTrace("Максимальные дневные потери от пролеживания товара за день");
+            Tracer.TraceOut("в первом магазине: " + Max_SDP_PNP[0].Stat + "  во втором магазине: " + Max_SDP_PNP[1].Stat);
+            Tracer.AnyTrace("Минимальные потери от нереализованной прибыли");
+            Tracer.TraceOut("в первом магазине: " + Min_SDP_PNP[0].Stat + "  во втором магазине: " + Min_SDP_PNP[1].Stat);
             Tracer.AnyTrace("");
+            // TODO: минимум/максимум дневных потерь от подачи заявки?
             Tracer.AnyTrace("Средние дневные потери от подачи заявок за день");
             Tracer.TraceOut("в первом магазине: " + (Shops[0].RequestsTotalCount.Value * PPZ / M) + "  во втором магазине: " + (Shops[1].RequestsTotalCount.Value * PPZ / M));
             Tracer.AnyTrace("");
 
             Tracer.TraceOut("Суммарные средние дневные потери торговой системы за день: " 
-                + ((Shops[0].ProductUnrealizedCurrent.Value * PP / M) 
-                + (Shops[1].ProductUnrealizedCurrent.Value * PP / M)
-                + (Shops[0].ProductUnmetDemandCurrent.Value * PNP / M)
-                + (Shops[1].ProductUnmetDemandCurrent.Value * PNP / M)
+                + ((Shops[0].ProductUnrealizedAll.Value * PP / M) 
+                + (Shops[1].ProductUnrealizedAll.Value * PP / M)
+                + (Shops[0].ProductUnmetDemandAll.Value * PNP / M)
+                + (Shops[1].ProductUnmetDemandAll.Value * PNP / M)
                 + (Shops[0].RequestsTotalCount.Value * PPZ / M)
                 + (Shops[1].RequestsTotalCount.Value * PPZ / M)));
-
         }
 
         /// <summary>
@@ -210,9 +230,9 @@ namespace Model_Lab
             Tracer.AnyTrace("");
             Tracer.AnyTrace("Количество магазинов:" + N);
             Tracer.AnyTrace("");
-            Tracer.AnyTrace("МО дневного спроса в i-ом магазине:" + Shops[0].Mx); //TODO: нигде не используется 
+            Tracer.AnyTrace("МО дневного спроса в i-ом магазине:" + Shops[0].Mx); //TODO: нигде не используется - используется в задании значений генераторов
             Tracer.AnyTrace("");
-            Tracer.AnyTrace("СКО дневного спроса в i-ом магазине:" + Shops[0].Sigma); //TODO: ну совсем нигде 
+            Tracer.AnyTrace("СКО дневного спроса в i-ом магазине:" + Shops[0].Sigma); //TODO: ну совсем нигде - используется в задании значений генераторов
             Tracer.AnyTrace("");
             Tracer.AnyTrace("Точка восстановления:" + TV);
             Tracer.AnyTrace("");
