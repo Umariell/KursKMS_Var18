@@ -35,20 +35,17 @@ namespace Model_Lab
                         // Неудовлетворенный спрос
                         Model.Shops[i].ProductUnmetDemandCurrent.Value = Math.Abs(Model.Shops[i].ProductDemandCurrent.Value - Model.Shops[i].ProductAmountCurrent.Value);
 
-                        // Объем потерь от подачи заявки
-                        Model.Shops[i].ProductLossRequestCurrent.Value = (int)Model.NormalGenerator_PP_Loss.GenerateValue();
-
                         // Планирование события 1 - появление заявки в СМО
                         // Задание интервала времени (для каждого магазина) через который наступит событие
-                        double deltaTime = i == 0 ? Model.ZR_TV_ValueGenerator1.GenerateValue() : Model.ZR_TV_ValueGenerator2.GenerateValue();
-
+                        //TODO: кажется, дельта работает не так. Пополнение у всех магазинов почему-то происходит строго через через день, хотя это значение должно варироваться в соответствии с ZR_TV
+                        double deltaTime = i == 0 ? Model.ZR_TV_ValueGenerator1.GenerateValue() : Model.ZR_TV_ValueGenerator2.GenerateValue(); 
                         var k2Event = new K2
                         {
                             ShopNumber = i,
                             DayOfSupply = DayNumber
                         };
                         Model.Shops[i].HasSendRequest.Value = true;
-                        Model.Shops[i].RequestsTotalCount.Value++;
+                        Model.Shops[i].RequestsTotalCountCurrent.Value++;
                         Model.PlanEvent(k2Event, DayNumber + deltaTime);
 
                         // Занесение в файл трассировки записи о запланированном событии
@@ -65,13 +62,13 @@ namespace Model_Lab
                         Model.Shops[i].ProductUnrealizedCurrent.Value = Model.Shops[i].ProductAmountCurrent.Value;
 
                     }
-                    // Увеличиваем текущий суммарный объем спроса на товар
-                    Model.SVST.Value += Model.Shops[i].ProductDemandCurrent.Value;
 
-                    Model.Shops[i].ProductDemandAll.Value += Model.Shops[i].ProductDemandCurrent.Value;
-                    Model.Shops[i].ProductLossRequestAll.Value += Model.Shops[i].ProductLossRequestCurrent.Value;
-                    Model.Shops[i].ProductUnmetDemandAll.Value += Model.Shops[i].ProductUnmetDemandCurrent.Value;
-                    Model.Shops[i].ProductUnrealizedAll.Value += Model.Shops[i].ProductUnrealizedCurrent.Value;
+                    // Увеличиваем текущий суммарный объем 
+
+                    Model.Shops[i].ProductDemandAll.Value += Model.Shops[i].ProductDemandCurrent.Value;           // спроса на товар
+                    Model.Shops[i].RequestsTotalCountAll.Value += Model.Shops[i].RequestsTotalCountCurrent.Value; // заявок на пополнение товара
+                    Model.Shops[i].ProductUnmetDemandAll.Value += Model.Shops[i].ProductUnmetDemandCurrent.Value; // неудовлетворенного спроса на товар
+                    Model.Shops[i].ProductUnrealizedAll.Value += Model.Shops[i].ProductUnrealizedCurrent.Value;   // пролежанного товара
                 }
                 Model.TraceModel(DayNumber);
                 Model.SVSTP.Value += Model.SVST.Value;
