@@ -31,3 +31,12 @@ D:\Programs\KMS_Kurs_Vasina\Example-SIM\bin\Debug\PSS.xml
 D:\Programs\KMS_Kurs_Vasina\Example-SIM\obj\Debug\KursKMS_Var18.csprojResolveAssemblyReference.cache
 D:\Programs\KMS_Kurs_Vasina\Example-SIM\obj\Debug\Example-SIM.exe
 D:\Programs\KMS_Kurs_Vasina\Example-SIM\obj\Debug\Example-SIM.pdb
+C:\Users\User\Desktop\KursKMS_Var18-master\Example-SIM\bin\Debug\Example-SIM.exe.config
+C:\Users\User\Desktop\KursKMS_Var18-master\Example-SIM\bin\Debug\Example-SIM.exe
+C:\Users\User\Desktop\KursKMS_Var18-master\Example-SIM\bin\Debug\Example-SIM.pdb
+C:\Users\User\Desktop\KursKMS_Var18-master\Example-SIM\bin\Debug\PSS.xml
+C:\Users\User\Desktop\KursKMS_Var18-master\Example-SIM\obj\Debug\KursKMS_Var18.csprojAssemblyReference.cache
+C:\Users\User\Desktop\KursKMS_Var18-master\Example-SIM\obj\Debug\KursKMS_Var18.csproj.CoreCompileInputs.cache
+C:\Users\User\Desktop\KursKMS_Var18-master\Example-SIM\obj\Debug\KursKMS_Var18.csproj.CopyComplete
+C:\Users\User\Desktop\KursKMS_Var18-master\Example-SIM\obj\Debug\Example-SIM.exe
+C:\Users\User\Desktop\KursKMS_Var18-master\Example-SIM\obj\Debug\Example-SIM.pdb

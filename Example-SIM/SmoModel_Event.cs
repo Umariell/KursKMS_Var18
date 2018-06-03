@@ -62,14 +62,16 @@ namespace Model_Lab
                         Model.Shops[i].ProductAmountCurrent.Value -= Model.Shops[i].ProductDemandCurrent.Value;
 
                         // Количество пролежанного товара
-                        Model.Shops[i].ProductUnrealizedCurrent.Value = Model.Shops[i].ProductAmountCurrent.Value; 
+                        Model.Shops[i].ProductUnrealizedCurrent.Value = Model.Shops[i].ProductAmountCurrent.Value;
 
-                        // TODO: убытки считаются в TraceModel
-                        // Считаем убытки от пролёжанного товара за текущий день в магазине
-                        //Model.Shops[i].ProductUnrealizedCurrent.Value = Model.Shops[i].ProductAmountCurrent.Value * Model.PP;
                     }
                     // Увеличиваем текущий суммарный объем спроса на товар
-                    Model.SVST.Value += Model.Shops[i].ProductDemandCurrent.Value;                 
+                    Model.SVST.Value += Model.Shops[i].ProductDemandCurrent.Value;
+
+                    Model.Shops[i].ProductDemandAll.Value += Model.Shops[i].ProductDemandCurrent.Value;
+                    Model.Shops[i].ProductLossRequestAll.Value += Model.Shops[i].ProductLossRequestCurrent.Value;
+                    Model.Shops[i].ProductUnmetDemandAll.Value += Model.Shops[i].ProductUnmetDemandCurrent.Value;
+                    Model.Shops[i].ProductUnrealizedAll.Value += Model.Shops[i].ProductUnrealizedCurrent.Value;
                 }
                 Model.TraceModel(DayNumber);
                 Model.SVSTP.Value += Model.SVST.Value;
@@ -78,7 +80,7 @@ namespace Model_Lab
                 //Планирование следующего события окончания рабочего дня; НО!!!!
                 //если время кончилось, планируем событие 3
                 Model.Day++;
-                if (Model.Day < M)
+                if (Model.Day <= M)
                 {
                     var k1Event = new K1
                     {
@@ -96,6 +98,7 @@ namespace Model_Lab
                     // Занесение в файл трассировки записи о запланированном событии
                     Model.Tracer.PlanEventTrace(k3Event,
                                           Model.Day);
+
                 }
             }
         }
@@ -103,7 +106,7 @@ namespace Model_Lab
         /// <summary>
         /// Класс для события 2 - пополнение товарного запаса в магазине Nмаг
         /// Момент подачи заявки на склад
-        /// </summary>
+        /// </summary>//(тут была точка останова)
         public class K2 : TimeModelEvent<SmoModel>
         {
             #region Атрибуты события
@@ -120,8 +123,7 @@ namespace Model_Lab
             // Алгоритм обработки события            
             protected override void HandleEvent(ModelEventArgs args)
             {
-                // Запланировать поставку товара в магазин с номером ShopNumber
-                Model.Shops[ShopNumber].SupplyAmountLast.Value = Model.VV;
+                // Выполнить поставку товара в магазин с номером ShopNumber
                 Model.Shops[ShopNumber].ProductAmountCurrent.Value += Model.VV;
                 Model.Shops[ShopNumber].HasSendRequest.Value = false;
                 Model.TraceRequest(DayOfSupply, ShopNumber);
@@ -139,7 +141,7 @@ namespace Model_Lab
 
             protected override void HandleEvent(ModelEventArgs args)
             {
-                Model.Day += 0;
+                //Model.TraceK3();
             }
         }
     }
