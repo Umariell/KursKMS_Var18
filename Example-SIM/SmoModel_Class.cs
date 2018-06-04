@@ -17,14 +17,14 @@ namespace Model_Lab
         /// <summary>
         /// количество дней
         /// </summary>
-        public const int M = 7;
+        public const int M = 14;
 
 
         /// <summary>
         /// ряд распределения, двумерный массив, характеризующий закон распределения времени восстановления товарного запаса,
         /// элементы которого P[i, j] – вероятность, 
         /// с которой возникает подача заявки из i-го магазина через 
-        /// j-ый день в ОС(i= 1, … N; j=1,2...7)
+        /// j-ый день в ОС(i= 1, … N; j=1,2...M)
         /// </summary>
         public double[,] ZR_TV = new double[N, M];
 
@@ -222,10 +222,6 @@ namespace Model_Lab
         /// </summary>
         NormalStream NormalGenerator_VDS2;
 
-        //Генератор равномерного распределения. Генерируем величину от 0 до 1 и смотрим - какое событие выполнилось.
-        //Например: в первый магазин будет заявка в 4 день с вероятностью 0.214, в 5 день - 0.786.
-        //Генератор выдал 0.4. Это больше 0.214, так что считаем, что заявка пришла в 5 день.
-
         /// <summary>
         /// генератор времени восстановления товарного запаса для первого магазина
         /// </summary>
@@ -247,11 +243,6 @@ namespace Model_Lab
         /// </summary>
         public DiscreteStream<double> ZR_TV_ValueGenerator2;
 
-        /// <summary>
-        /// генератор размера потерь от подачи заявки
-        /// </summary>
-        NormalStream NormalGenerator_PP_Loss;
-
         #endregion
 
         #region Инициализация объектов модели
@@ -267,8 +258,6 @@ namespace Model_Lab
                 Shops[i].ProductDemandCurrent = InitModelObject<TIntVar>("Текущий объем спроса на товар в(во) " + i + "-ом магазине ");
                 Shops[i].ProductUnmetDemandCurrent = InitModelObject<TRealVar>("Текущий объем неудовлетворенного спроса в(во) " + i + "-ом магазине ");
                 Shops[i].ProductUnrealizedCurrent = InitModelObject<TRealVar>("Текущий объем пролежанного товара в(во) " + i + "-ом магазине ");
-
-
                 Shops[i].HasSendRequest = InitModelObject<TBoolVar>("Идентификатор подачи заявки в(во) " + i + "-ом магазине ");
                 Shops[i].RequestsTotalCountCurrent = InitModelObject<TRealVar>("Текцщее количество поданных заявок на пополнение товара  в(во) " + i + "-ом магазине ");
                 Shops[i].RequestsTotalCountAll = InitModelObject<TRealVar>("Суммарное количество поданных заявок на пополнение товара  в(во) " + i + "-ом магазине ");
@@ -297,7 +286,6 @@ namespace Model_Lab
             NormalGenerator_VDS2 = InitModelObject<NormalStream>("генератор потока 'объем дневного спроса во втором магазине'");
             UniformGenerator_TVost1 = InitModelObject<UniformStream>("генератор потока 'время восстановления товарного запаса в первом магазине'");
             UniformGenerator_TVost2 = InitModelObject<UniformStream>("генератор потока 'время восстановления товарного запаса во втором магазине'");
-            NormalGenerator_PP_Loss = InitModelObject<NormalStream>("генератор потока 'объём потерь при подаче заявки на восстановление'");
 
             #endregion
 

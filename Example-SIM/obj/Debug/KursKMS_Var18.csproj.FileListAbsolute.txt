@@ -40,3 +40,11 @@ C:\Users\User\Desktop\KursKMS_Var18-master\Example-SIM\obj\Debug\KursKMS_Var18.c
 C:\Users\User\Desktop\KursKMS_Var18-master\Example-SIM\obj\Debug\KursKMS_Var18.csproj.CopyComplete
 C:\Users\User\Desktop\KursKMS_Var18-master\Example-SIM\obj\Debug\Example-SIM.exe
 C:\Users\User\Desktop\KursKMS_Var18-master\Example-SIM\obj\Debug\Example-SIM.pdb
+C:\Users\User\Documents\GitHub\KursKMS_Var18\Example-SIM\bin\Debug\Example-SIM.exe.config
+C:\Users\User\Documents\GitHub\KursKMS_Var18\Example-SIM\bin\Debug\Example-SIM.exe
+C:\Users\User\Documents\GitHub\KursKMS_Var18\Example-SIM\bin\Debug\Example-SIM.pdb
+C:\Users\User\Documents\GitHub\KursKMS_Var18\Example-SIM\obj\Debug\KursKMS_Var18.csproj.CoreCompileInputs.cache
+C:\Users\User\Documents\GitHub\KursKMS_Var18\Example-SIM\obj\Debug\KursKMS_Var18.csproj.CopyComplete
+C:\Users\User\Documents\GitHub\KursKMS_Var18\Example-SIM\obj\Debug\Example-SIM.exe
+C:\Users\User\Documents\GitHub\KursKMS_Var18\Example-SIM\obj\Debug\Example-SIM.pdb
+C:\Users\User\Documents\GitHub\KursKMS_Var18\Example-SIM\obj\Debug\KursKMS_Var18.csprojAssemblyReference.cache

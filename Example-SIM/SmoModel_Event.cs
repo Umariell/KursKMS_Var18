@@ -30,8 +30,11 @@ namespace Model_Lab
                         Model.Shops[i].ProductDemandCurrent.Value = (int)Model.NormalGenerator_VDS2.GenerateValue();
 
                     // Если спрос превысил текущий объем товара в магазине
+                    //if ((Model.Shops[i].ProductAmountCurrent.Value < Model.Shops[i].ProductDemandCurrent.Value)&& (Model.Shops[i].HasSendRequest.Value == false))
+                    //{
                     if (Model.Shops[i].ProductAmountCurrent.Value < Model.Shops[i].ProductDemandCurrent.Value)
                     {
+
                         // Неудовлетворенный спрос
                         Model.Shops[i].ProductUnmetDemandCurrent.Value = Math.Abs(Model.Shops[i].ProductDemandCurrent.Value - Model.Shops[i].ProductAmountCurrent.Value);
 
@@ -45,7 +48,7 @@ namespace Model_Lab
                             DayOfSupply = DayNumber
                         };
                         Model.Shops[i].HasSendRequest.Value = true;
-                        Model.Shops[i].RequestsTotalCountCurrent.Value++;
+                        Model.Shops[i].RequestsTotalCountCurrent.Value = 1;
                         Model.PlanEvent(k2Event, DayNumber + deltaTime);
 
                         // Занесение в файл трассировки записи о запланированном событии
@@ -58,18 +61,23 @@ namespace Model_Lab
                         // Если спрос меньше текущего объема товара, то вычитаем из объема товара объем спроса
                         Model.Shops[i].ProductAmountCurrent.Value -= Model.Shops[i].ProductDemandCurrent.Value;
 
-                        // Количество пролежанного товара
-                        Model.Shops[i].ProductUnrealizedCurrent.Value = Model.Shops[i].ProductAmountCurrent.Value;
+                        if (Model.Shops[i].ProductAmountCurrent.Value < 0)
+                            Model.Shops[i].ProductUnrealizedCurrent.Value = 0;
+                        else
+                            Model.Shops[i].ProductUnrealizedCurrent.Value = Model.Shops[i].ProductAmountCurrent.Value;
 
                     }
 
                     // Увеличиваем текущий суммарный объем 
+                    //Model.SVST.Value += Model.Shops[i].ProductDemandCurrent.Value;
 
                     Model.Shops[i].ProductDemandAll.Value += Model.Shops[i].ProductDemandCurrent.Value;           // спроса на товар
-                    Model.Shops[i].RequestsTotalCountAll.Value += Model.Shops[i].RequestsTotalCountCurrent.Value; // заявок на пополнение товара
+                    if (Model.Shops[i].HasSendRequest.Value == true)
+                        Model.Shops[i].RequestsTotalCountAll.Value += Model.Shops[i].RequestsTotalCountCurrent.Value; // заявок на пополнение товара
                     Model.Shops[i].ProductUnmetDemandAll.Value += Model.Shops[i].ProductUnmetDemandCurrent.Value; // неудовлетворенного спроса на товар
                     Model.Shops[i].ProductUnrealizedAll.Value += Model.Shops[i].ProductUnrealizedCurrent.Value;   // пролежанного товара
                 }
+
                 Model.TraceModel(DayNumber);
                 Model.SVSTP.Value += Model.SVST.Value;
                 Model.SVST.Value = 0;
@@ -138,7 +146,7 @@ namespace Model_Lab
 
             protected override void HandleEvent(ModelEventArgs args)
             {
-                //Model.TraceK3();
+                //статистика, выводимая в SMOModel_Experiment.cs
             }
         }
     }
