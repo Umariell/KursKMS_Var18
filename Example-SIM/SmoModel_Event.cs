@@ -70,11 +70,11 @@ namespace Model_Lab
                     // Увеличиваем текущий суммарный объем 
                     //Model.SVST.Value += Model.Shops[i].ProductDemandCurrent.Value;
 
-                    Model.Shops[i].ProductDemandAll.Value += Model.Shops[i].ProductDemandCurrent.Value;           // спроса на товар
+                    Model.Shops[i].ProductDemandAll.Value += Model.Shops[i].ProductDemandCurrent.Value;               // спроса на товар
                     if (Model.Shops[i].HasSendRequest.Value == 1)
                         Model.Shops[i].RequestsTotalCountAll.Value += Model.Shops[i].RequestsTotalCountCurrent.Value; // заявок на пополнение товара
-                    Model.Shops[i].ProductUnmetDemandAll.Value += Model.Shops[i].ProductUnmetDemandCurrent.Value; // неудовлетворенного спроса на товар
-                    Model.Shops[i].ProductUnrealizedAll.Value += Model.Shops[i].ProductUnrealizedCurrent.Value;   // пролежанного товара
+                    Model.Shops[i].ProductUnmetDemandAll.Value += Model.Shops[i].ProductUnmetDemandCurrent.Value;     // неудовлетворенного спроса на товар
+                    Model.Shops[i].ProductUnrealizedAll.Value += Model.Shops[i].ProductUnrealizedCurrent.Value;       // пролежанного товара
                 }
 
                 
@@ -84,7 +84,7 @@ namespace Model_Lab
                 //Планирование следующего события окончания рабочего дня; НО!!!!
                 //если время кончилось, планируем событие 3
                 Model.Day++;
-                if (Model.Day <= M)
+                if ((Model.Day <= 28))
                 {
                     var k1Event = new K1
                     {
@@ -109,12 +109,13 @@ namespace Model_Lab
                     Model.PlanEvent(k3Event, Model.Day);
                     // Занесение в файл трассировки записи о запланированном событии
                     Model.Tracer.PlanEventTrace(k3Event,
-                                          Model.Day);
+                                          Model.Day, Model.SVSTP.Value);
 
                 }
                 Model.TraceModel(DayNumber);
             }
         }
+
 
         /// <summary>
         /// Класс для события 2 - пополнение товарного запаса в магазине Nмаг
@@ -140,7 +141,6 @@ namespace Model_Lab
                 Model.Shops[ShopNumber].ProductAmountCurrent.Value += Model.VV;
                 Model.Shops[ShopNumber].HasSendRequest.Value = 0;
                 Model.SVST.Value += Model.VV;
-                Model.TraceRequest(DayOfSupply, ShopNumber);
                 
             }
         }
@@ -152,10 +152,15 @@ namespace Model_Lab
         {
             #region Атрибуты события
 
+            public int NumberOfWeek { get; set; }
+            public double SVSTP_K3 { get; set; }
+
+
             #endregion
 
             protected override void HandleEvent(ModelEventArgs args)
             {
+                
                 
             }
         }
