@@ -21,6 +21,7 @@ namespace Model_Lab
             // Алгоритм обработки события            
             protected override void HandleEvent(ModelEventArgs args)
             {
+                //Model.Tracer.AnyTrace("K1", "DayNumber = " + DayNumber);
                 for (int i = 0; i < N; i++)
                 {
                     if (i == 0)
@@ -47,7 +48,8 @@ namespace Model_Lab
                             DayOfSupply = DayNumber
                         };
                         Model.Shops[i].HasSendRequest.Value = 1;
-                        Model.Shops[i].RequestsTotalCountCurrent.Value = 1;
+                        Model.Shops[i].RequestsTotalCountCurrent.Value++;
+                        Model.Shops[i].RequestsTotalCountAll.Value++;
                         Model.PlanEvent(k2Event, DayNumber + deltaTime);
 
                         // Занесение в файл трассировки записи о запланированном событии
@@ -59,40 +61,33 @@ namespace Model_Lab
                     {
                         // Если спрос меньше текущего объема товара, то вычитаем из объема товара объем спроса
                         Model.Shops[i].ProductAmountCurrent.Value -= Model.Shops[i].ProductDemandCurrent.Value;
-
-                        if (Model.Shops[i].ProductAmountCurrent.Value < 0)
-                            Model.Shops[i].ProductUnrealizedCurrent.Value = 0;
-                        else
-                            Model.Shops[i].ProductUnrealizedCurrent.Value = Model.Shops[i].ProductAmountCurrent.Value;
-
+                        Model.Shops[i].ProductUnrealizedCurrent.Value = Model.Shops[i].ProductAmountCurrent.Value;
                     }
 
                     // Увеличиваем текущий суммарный объем 
                     //Model.SVST.Value += Model.Shops[i].ProductDemandCurrent.Value;
 
                     Model.Shops[i].ProductDemandAll.Value += Model.Shops[i].ProductDemandCurrent.Value;               // спроса на товар
-                    if (Model.Shops[i].HasSendRequest.Value == 1)
-                        Model.Shops[i].RequestsTotalCountAll.Value += Model.Shops[i].RequestsTotalCountCurrent.Value; // заявок на пополнение товара
+                    //if (Model.Shops[i].HasSendRequest.Value == 1)
+                    //    Model.Shops[i].RequestsTotalCountAll.Value++; // заявок на пополнение товара
                     Model.Shops[i].ProductUnmetDemandAll.Value += Model.Shops[i].ProductUnmetDemandCurrent.Value;     // неудовлетворенного спроса на товар
                     Model.Shops[i].ProductUnrealizedAll.Value += Model.Shops[i].ProductUnrealizedCurrent.Value;       // пролежанного товара
                 }
-
-                
-                
-                
                 
                 //Планирование следующего события окончания рабочего дня; НО!!!!
                 //если время кончилось, планируем событие 3
                 Model.Day++;
-                if ((Model.Day <= 28))
+                if (Model.Day <= M)
                 {
                     var k1Event = new K1
                     {
                         DayNumber = Model.Day
                     };
                     Model.PlanEvent(k1Event,  
-                                    k1Event.DayNumber);
-                    Model.Tracer.PlanEventTrace(k1Event, k1Event.DayNumber, "VS[0," + Model.Shops[0].ProductDemandCurrent.Value + "]" + " \tVS[1," + Model.Shops[1].ProductDemandCurrent.Value + "]");
+                                    1);
+                    Model.Tracer.PlanEventTrace(k1Event, 
+                                                k1Event.DayNumber, 
+                                                "VS[0," + Model.Shops[0].ProductDemandCurrent.Value + "]" + " \tVS[1," + Model.Shops[1].ProductDemandCurrent.Value + "]");
 
                     // Занесение в файл трассировки записи о запланированном событии
                     //Model.Tracer.PlanEventTrace(k1Event, 
@@ -101,16 +96,15 @@ namespace Model_Lab
                     //Model.Tracer.PlanEventTrace(k1Event, "VS[1," + Model.Shops[1].ProductDemandCurrent.Value + "]");
 
                 }
-                else
+                if (Model.Day % 7 == 0) // == 1
                 {
                     var k3Event = new K3();
-                    Model.SVSTP.Value = Model.SVST.Value; 
-                    Model.SVST.Value = 0;
-                    Model.PlanEvent(k3Event, Model.Day);
+                    Model.PlanEvent(k3Event, 0);
                     // Занесение в файл трассировки записи о запланированном событии
                     Model.Tracer.PlanEventTrace(k3Event,
-                                          Model.Day, Model.SVSTP.Value);
-
+                                                Model.Day / 7, 
+                                                Model.SVSTP.Value,
+                                                Model.SVST.Value);
                 }
                 Model.TraceModel(DayNumber);
             }
@@ -137,11 +131,11 @@ namespace Model_Lab
             // Алгоритм обработки события            
             protected override void HandleEvent(ModelEventArgs args)
             {
+                //Model.Tracer.AnyTrace("K2", "DayOfSupply = " + DayOfSupply);
                 // Выполнить поставку товара в магазин с номером ShopNumber
                 Model.Shops[ShopNumber].ProductAmountCurrent.Value += Model.VV;
                 Model.Shops[ShopNumber].HasSendRequest.Value = 0;
-                Model.SVST.Value += Model.VV;
-                
+                Model.SVST.Value += Model.VV;      
             }
         }
 
@@ -151,17 +145,23 @@ namespace Model_Lab
         public class K3 : TimeModelEvent<SmoModel>
         {
             #region Атрибуты события
-
+            /// <summary>
+            /// Номер недели.
+            /// </summary>
             public int NumberOfWeek { get; set; }
+            /// <summary>
+            /// Что-то.
+            /// </summary>
             public double SVSTP_K3 { get; set; }
-
-
             #endregion
 
             protected override void HandleEvent(ModelEventArgs args)
             {
-                
-                
+                //Model.Tracer.AnyTrace("K3", "Week = " + NumberOfWeek);
+                Model.SVSTP.Value = Model.SVST.Value;
+                Model.SVST.Value = 0;
+                // TODO: какая-то трассировка.
+                Model.Tracer.AnyTrace("Неделя: " + NumberOfWeek, "Model.SVST: " + Model.SVST.Value, "Model.SVSTP: " + Model.SVSTP.Value);                
             }
         }
     }
