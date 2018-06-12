@@ -18,7 +18,6 @@ namespace Model_Lab
             public int DayNumber { get; set; }
 
             #endregion
-
             // Алгоритм обработки события            
             protected override void HandleEvent(ModelEventArgs args)
             {
@@ -47,12 +46,12 @@ namespace Model_Lab
                             ShopNumber = i,
                             DayOfSupply = DayNumber
                         };
-                        Model.Shops[i].HasSendRequest.Value = true;
+                        Model.Shops[i].HasSendRequest.Value = 1;
                         Model.Shops[i].RequestsTotalCountCurrent.Value = 1;
                         Model.PlanEvent(k2Event, DayNumber + deltaTime);
 
                         // Занесение в файл трассировки записи о запланированном событии
-                        Model.Tracer.PlanEventTrace(k2Event,
+                        Model.Tracer.PlanEventTrace(k2Event, 
                                                     DayNumber + deltaTime,
                                                     k2Event.ShopNumber);
                     }
@@ -72,15 +71,15 @@ namespace Model_Lab
                     //Model.SVST.Value += Model.Shops[i].ProductDemandCurrent.Value;
 
                     Model.Shops[i].ProductDemandAll.Value += Model.Shops[i].ProductDemandCurrent.Value;           // спроса на товар
-                    if (Model.Shops[i].HasSendRequest.Value == true)
+                    if (Model.Shops[i].HasSendRequest.Value == 1)
                         Model.Shops[i].RequestsTotalCountAll.Value += Model.Shops[i].RequestsTotalCountCurrent.Value; // заявок на пополнение товара
                     Model.Shops[i].ProductUnmetDemandAll.Value += Model.Shops[i].ProductUnmetDemandCurrent.Value; // неудовлетворенного спроса на товар
                     Model.Shops[i].ProductUnrealizedAll.Value += Model.Shops[i].ProductUnrealizedCurrent.Value;   // пролежанного товара
                 }
 
-                Model.TraceModel(DayNumber);
-                Model.SVSTP.Value += Model.SVST.Value;
-                Model.SVST.Value = 0;
+                
+                
+                
                 
                 //Планирование следующего события окончания рабочего дня; НО!!!!
                 //если время кончилось, планируем событие 3
@@ -91,20 +90,29 @@ namespace Model_Lab
                     {
                         DayNumber = Model.Day
                     };
-                    Model.PlanEvent(k1Event, k1Event.DayNumber);
+                    Model.PlanEvent(k1Event,  
+                                    k1Event.DayNumber);
+                    Model.Tracer.PlanEventTrace(k1Event, k1Event.DayNumber, "VS[0," + Model.Shops[0].ProductDemandCurrent.Value + "]" + " \tVS[1," + Model.Shops[1].ProductDemandCurrent.Value + "]");
+
                     // Занесение в файл трассировки записи о запланированном событии
-                    Model.Tracer.PlanEventTrace(k1Event,
-                                          k1Event.DayNumber);
+                    //Model.Tracer.PlanEventTrace(k1Event, 
+                    //                            k1Event.DayNumber);
+                    //Model.Tracer.PlanEventTrace(k1Event, "VS[0," + Model.Shops[0].ProductDemandCurrent.Value+"]");
+                    //Model.Tracer.PlanEventTrace(k1Event, "VS[1," + Model.Shops[1].ProductDemandCurrent.Value + "]");
+
                 }
                 else
                 {
                     var k3Event = new K3();
+                    Model.SVSTP.Value = Model.SVST.Value; 
+                    Model.SVST.Value = 0;
                     Model.PlanEvent(k3Event, Model.Day);
                     // Занесение в файл трассировки записи о запланированном событии
                     Model.Tracer.PlanEventTrace(k3Event,
                                           Model.Day);
 
                 }
+                Model.TraceModel(DayNumber);
             }
         }
 
@@ -130,8 +138,10 @@ namespace Model_Lab
             {
                 // Выполнить поставку товара в магазин с номером ShopNumber
                 Model.Shops[ShopNumber].ProductAmountCurrent.Value += Model.VV;
-                Model.Shops[ShopNumber].HasSendRequest.Value = false;
+                Model.Shops[ShopNumber].HasSendRequest.Value = 0;
+                Model.SVST.Value += Model.VV;
                 Model.TraceRequest(DayOfSupply, ShopNumber);
+                
             }
         }
 
@@ -146,7 +156,7 @@ namespace Model_Lab
 
             protected override void HandleEvent(ModelEventArgs args)
             {
-                //статистика, выводимая в SMOModel_Experiment.cs
+                
             }
         }
     }

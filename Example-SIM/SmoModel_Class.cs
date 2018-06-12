@@ -17,7 +17,7 @@ namespace Model_Lab
         /// <summary>
         /// количество дней
         /// </summary>
-        public const int M = 14;
+        public const int M = 31;
 
 
         /// <summary>
@@ -86,7 +86,7 @@ namespace Model_Lab
         public TRealVar SVST;
 
         /// <summary>
-        /// Cуммарный объем спроса на товар (за все время)
+        /// Cуммарный объем спроса на товар(за все время)
         /// </summary>
         public TRealVar SVSTP;
 
@@ -145,9 +145,9 @@ namespace Model_Lab
             public TRealVar ProductUnrealizedAll { get; set; }
 
             /// <summary>
-            /// идентификатор подачи очередной заявки на пополнение в магазине в день № t1 (true - заявка подана, false -заявка не подана)
+            /// идентификатор подачи очередной заявки на пополнение в магазине в день № t1 (1 - заявка подана, 0 -заявка не подана)
             /// </summary>
-            public TBoolVar HasSendRequest { get; set; }
+            public TIntVar HasSendRequest { get; set; }
 
             /// <summary>
             /// Количество заявок на пополнение товара.
@@ -207,6 +207,13 @@ namespace Model_Lab
         public Min<double>[] Min_SSDS;
         public Max<double>[] Max_SSDS;
 
+        /// <summary>
+        /// суммарный объем текущего спроса на товар с оптового скалада за очередной фикс. интервал времени 
+        /// </summary>
+        public Variance<double> Variance_SVSTP;
+        public Min<double>Min_SVSTP;
+        public Max<double>Max_SVSTP;
+
 
         #endregion
 
@@ -258,7 +265,7 @@ namespace Model_Lab
                 Shops[i].ProductDemandCurrent = InitModelObject<TIntVar>("Текущий объем спроса на товар в(во) " + i + "-ом магазине ");
                 Shops[i].ProductUnmetDemandCurrent = InitModelObject<TRealVar>("Текущий объем неудовлетворенного спроса в(во) " + i + "-ом магазине ");
                 Shops[i].ProductUnrealizedCurrent = InitModelObject<TRealVar>("Текущий объем пролежанного товара в(во) " + i + "-ом магазине ");
-                Shops[i].HasSendRequest = InitModelObject<TBoolVar>("Идентификатор подачи заявки в(во) " + i + "-ом магазине ");
+                Shops[i].HasSendRequest = InitModelObject<TIntVar>("Идентификатор подачи заявки в(во) " + i + "-ом магазине ");
                 Shops[i].RequestsTotalCountCurrent = InitModelObject<TRealVar>("Текцщее количество поданных заявок на пополнение товара  в(во) " + i + "-ом магазине ");
                 Shops[i].RequestsTotalCountAll = InitModelObject<TRealVar>("Суммарное количество поданных заявок на пополнение товара  в(во) " + i + "-ом магазине ");
                 Shops[i].ProductDemandAll       = InitModelObject<TIntVar>("Суммарный объем спроса на товар в(во) " + i + "-ом магазине ");
@@ -315,11 +322,19 @@ namespace Model_Lab
 
             //потери от подачи заявок
             Variance_SDP_PPZ = InitModelObjectArray<Variance<double>>(N, "Сборщик статистики: средние дневные потери от подачи заявок в i-том магазине");
+            Variance_SDP_PPZ[0].ConnectOnSet(Shops[0].RequestsTotalCountCurrent);
+            Variance_SDP_PPZ[1].ConnectOnSet(Shops[1].RequestsTotalCountCurrent);
             Max_SDP_PPZ = InitModelObjectArray<Max<double>>(N, "Максимум потерь от подачи заявок в i-том магазине");
+            Max_SDP_PPZ[0].ConnectOnSet(Shops[0].RequestsTotalCountCurrent);
+            Max_SDP_PPZ[1].ConnectOnSet(Shops[1].RequestsTotalCountCurrent);
             Min_SDP_PPZ = InitModelObjectArray<Min<double>>(N, "Минимум потерь от подачи заявок в i-том магазине");
+            Min_SDP_PPZ[0].ConnectOnSet(Shops[0].RequestsTotalCountCurrent);
+            Min_SDP_PPZ[1].ConnectOnSet(Shops[1].RequestsTotalCountCurrent);
 
             // суммарные средние дневные потери торговой системы
             Variance_SSDS = InitModelObject<Variance<double>>("Сборщик статистики: суммарные средние дневные потери торговой системы");
+
+
 
             #endregion
         }
