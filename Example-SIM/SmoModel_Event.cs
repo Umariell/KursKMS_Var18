@@ -161,7 +161,7 @@ namespace Model_Lab
                 Model.SVSTP.Value = Model.SVST.Value;
                 Model.SVST.Value = 0;
                 // TODO: какая-то трассировка.
-                Model.Tracer.AnyTrace("Неделя: " + NumberOfWeek, "Model.SVST: " + Model.SVST.Value, "Model.SVSTP: " + Model.SVSTP.Value);                
+                Model.Tracer.AnyTrace("TF №: " + NumberOfWeek, "\tSVST: " + Model.SVST.Value, "\tSVSTP: " + Model.SVSTP.Value);                
             }
         }
     }

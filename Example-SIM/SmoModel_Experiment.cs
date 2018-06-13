@@ -58,7 +58,7 @@ namespace Model_Lab
             TP = 1000;
             for (int i = 0; i < N; i++)
             {
-                Shops[i].Mx = 20;
+                Shops[i].Mx = 36;
                 Shops[i].Sigma = 4;
             }
 
@@ -96,10 +96,10 @@ namespace Model_Lab
 
 
 
-            (NormalGenerator_VDS1.BPN as GeneratedBaseRandomStream).Seed = 459 * seed;
-            (NormalGenerator_VDS2.BPN as GeneratedBaseRandomStream).Seed = 267 * seed;
-            (UniformGenerator_TVost1.BPN as GeneratedBaseRandomStream).Seed = 980 * seed;
-            (UniformGenerator_TVost2.BPN as GeneratedBaseRandomStream).Seed = 589 * seed;
+            (NormalGenerator_VDS1.BPN as GeneratedBaseRandomStream).Seed = 149 * seed;
+            (NormalGenerator_VDS2.BPN as GeneratedBaseRandomStream).Seed = 167 * seed;
+            (UniformGenerator_TVost1.BPN as GeneratedBaseRandomStream).Seed = 130 * seed;
+            (UniformGenerator_TVost2.BPN as GeneratedBaseRandomStream).Seed = 237 * seed;
 
             #endregion
         }
@@ -182,7 +182,7 @@ namespace Model_Lab
             Tracer.TraceOut("           макс:    " + (Max_SDP_PNP[0].Stat * PNP));
             Tracer.TraceOut("           мин:     " + (Min_SDP_PNP[0].Stat * PNP));
             Tracer.TraceOut("       потери от подачи заявки SDP_PZ[0] = " + (Shops[0].RequestsTotalCountAll.Value * PPZ / M));
-            Tracer.TraceOut("           макс:    " + (Max_SDP_PPZ[0].Stat * PPZ)); //TODO: надо что-то делать с этими заявками, как-то тоже умудриться собрать по ним статистику нормально
+            Tracer.TraceOut("           макс:    " + (Max_SDP_PPZ[0].Stat * PPZ)); 
             Tracer.TraceOut("           мин:     " + (Min_SDP_PPZ[0].Stat * PPZ));
             Tracer.TraceOut("  во втором магазине: ---------------------------------------------");
             Tracer.TraceOut("       потери от пролеживания товара SDP_VP[1] = " + (Shops[1].ProductUnrealizedAll.Value * PP / M));
@@ -201,18 +201,9 @@ namespace Model_Lab
             Tracer.AnyTrace("");
             Tracer.TraceOut("======== II. Сбор статистики суммарной потери в торговой системе ==============");
             Tracer.AnyTrace("");
-            Tracer.TraceOut("SVSTP:" + SVSTP.Value);
-            Tracer.TraceOut("МО:" + Variance_SVSTP.Mx);
-            Tracer.TraceOut("Максимум:" + Max_SVSTP.Stat);
-            Tracer.TraceOut("Минимум:" + Min_SVSTP.Stat);
-
-            //TODO: эта величина отвечает за то, сколько товара всего было вывезено из склада в оба магазина
-            //TODO: по SVSTP мы собираем статистику (минимум и максимум, например). Время прогона нужно выбирать больше (!!!), чем время фикс.интервала сбора статистики
-            //TODO: например, время прогона = месяц (сейчас задано 28 дней), а фикс.интервал - неделя. Мы в течение месяца после каждой недели выполняем событие К3 (собираем статистику по SVSTP), см. блок-схему в отчете. 
-
-            //Tracer.TraceOut("Max_SVSTP: " + (Max_SVSTP.Stat * SVST));  
-            //Tracer.TraceOut("Min_SVSTP: " + (Min_SVSTP.Stat * SVST));  
-            //TODO: а потом мы выводим сюда, в "Статистические результаты моделирования" SVSTP, его минимум и максимум
+            Tracer.TraceOut(" МО суммарного объема поставок с оптового склада по всем магазинам: " + Variance_SVSTP.Mx);
+            Tracer.TraceOut(" макс: " + Max_SVSTP.Stat);
+            Tracer.TraceOut(" мин: " + Min_SVSTP.Stat);
 
 
         }
@@ -226,21 +217,21 @@ namespace Model_Lab
             Tracer.TraceOut("========================================================================");
             Tracer.TraceOut("======================= Запущена модель ================================");
             Tracer.TraceOut("========================================================================");
-            Tracer.AnyTrace("");
+            //Tracer.AnyTrace("");
             Tracer.AnyTrace("Параметры модели:");
-            Tracer.AnyTrace("");
+            //Tracer.AnyTrace("");
             Tracer.AnyTrace("Количество магазинов: " + N);
-            Tracer.AnyTrace("");
+            //Tracer.AnyTrace("");
             Tracer.AnyTrace("МО дневного спроса в i-ом магазине: " + Shops[0].Mx);
-            Tracer.AnyTrace("");
+           // Tracer.AnyTrace("");
             Tracer.AnyTrace("СКО дневного спроса в i-ом магазине: " + Shops[0].Sigma);
-            Tracer.AnyTrace("");
+           // Tracer.AnyTrace("");
             Tracer.AnyTrace("Точка восстановления: " + TV);
-            Tracer.AnyTrace("");
+            //Tracer.AnyTrace("");
             Tracer.AnyTrace("Объем восстановления: " + VV);
-            Tracer.AnyTrace("");
+            //Tracer.AnyTrace("");
             Tracer.AnyTrace("Начальное состояние модели:");
-            Tracer.AnyTrace("");
+            //Tracer.AnyTrace("");
 
         }
 
@@ -249,20 +240,20 @@ namespace Model_Lab
         /// </summary>
         void TraceModel(int dayNumber)
         {
-            Tracer.AnyTrace("SVP[0," + Shops[0].ProductUnrealizedCurrent.Value + "]",
-                            "SVNS[0," + Shops[0].ProductUnmetDemandCurrent.Value + "]",
-                            "SKZ[0," + Shops[0].RequestsTotalCountCurrent.Value + "]",
-                            "VTT[0," + Shops[0].ProductAmountCurrent.Value + "]",
-                            "Flag[0," + Shops[0].HasSendRequest.Value + "]");
+            //Tracer.AnyTrace("SVP[0," + Shops[0].ProductUnrealizedCurrent.Value + "]",
+            //                "SVNS[0," + Shops[0].ProductUnmetDemandCurrent.Value + "]",
+            //                "SKZ[0," + Shops[0].RequestsTotalCountCurrent.Value + "]",
+            //                "VTT[0," + Shops[0].ProductAmountCurrent.Value + "]",
+            //                "Flag[0," + Shops[0].HasSendRequest.Value + "]");
 
-            Tracer.AnyTrace("SVP[1," + Shops[1].ProductUnrealizedCurrent.Value + "]",
-                            "SVNS[1," + Shops[1].ProductUnmetDemandCurrent.Value + "]",
-                            "SKZ[1," + Shops[1].RequestsTotalCountCurrent.Value + "]",
-                            "VTT[1," + Shops[1].ProductAmountCurrent.Value + "]",
-                            "Flag[1," + Shops[1].HasSendRequest.Value + "]",
-                            "SVST = " + SVST.Value);
-            Tracer.AnyTrace("");
-            Tracer.AnyTrace("");
+            //Tracer.AnyTrace("SVP[1," + Shops[1].ProductUnrealizedCurrent.Value + "]",
+            //                "SVNS[1," + Shops[1].ProductUnmetDemandCurrent.Value + "]",
+            //                "SKZ[1," + Shops[1].RequestsTotalCountCurrent.Value + "]",
+            //                "VTT[1," + Shops[1].ProductAmountCurrent.Value + "]",
+            //                "Flag[1," + Shops[1].HasSendRequest.Value + "]",
+            //                "SVST = " + SVST.Value);
+            //Tracer.AnyTrace("");
+            //Tracer.AnyTrace("");
         }
 
     }

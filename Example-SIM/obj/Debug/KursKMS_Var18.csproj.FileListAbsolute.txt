@@ -48,3 +48,4 @@ C:\Users\User\Documents\GitHub\KursKMS_Var18\Example-SIM\obj\Debug\KursKMS_Var18
 C:\Users\User\Documents\GitHub\KursKMS_Var18\Example-SIM\obj\Debug\Example-SIM.exe
 C:\Users\User\Documents\GitHub\KursKMS_Var18\Example-SIM\obj\Debug\Example-SIM.pdb
 C:\Users\User\Documents\GitHub\KursKMS_Var18\Example-SIM\obj\Debug\KursKMS_Var18.csprojAssemblyReference.cache
+C:\Users\User\Documents\GitHub\KursKMS_Var18\Example-SIM\bin\Debug\PSS.xml
