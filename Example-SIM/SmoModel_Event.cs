@@ -21,41 +21,39 @@ namespace Model_Lab
             // Алгоритм обработки события            
             protected override void HandleEvent(ModelEventArgs args)
             {
-                //Model.Tracer.AnyTrace("K1", "DayNumber = " + DayNumber);
                 for (int i = 0; i < N; i++)
                 {
                     if (i == 0)
                         Model.Shops[i].ProductDemandCurrent.Value = (int)Model.NormalGenerator_VDS1.GenerateValue();
-                    if (i == 1) // else
+                    if (i == 1)
                         Model.Shops[i].ProductDemandCurrent.Value = (int)Model.NormalGenerator_VDS2.GenerateValue();
 
                     // Если спрос превысил текущий объем товара в магазине
-                    //if ((Model.Shops[i].ProductAmountCurrent.Value < Model.Shops[i].ProductDemandCurrent.Value)&& (Model.Shops[i].HasSendRequest.Value == false))
-                    //{
                     if (Model.Shops[i].ProductAmountCurrent.Value < Model.Shops[i].ProductDemandCurrent.Value)
                     {
-
                         // Неудовлетворенный спрос
                         Model.Shops[i].ProductUnmetDemandCurrent.Value = Math.Abs(Model.Shops[i].ProductDemandCurrent.Value - Model.Shops[i].ProductAmountCurrent.Value);
 
                         // Планирование события 1 - появление заявки в СМО
                         // Задание интервала времени (для каждого магазина) через который наступит событие
-                        //TODO: кажется, дельта работает не так. Пополнение у всех магазинов почему-то происходит строго через через день, хотя это значение должно варироваться в соответствии с ZR_TV
-                        double deltaTime = i == 0 ? Model.ZR_TV_ValueGenerator1.GenerateValue() : Model.ZR_TV_ValueGenerator2.GenerateValue(); 
-                        var k2Event = new K2
+                        if (Model.Shops[i].HasSendRequest == 0)
                         {
-                            ShopNumber = i,
-                            DayOfSupply = DayNumber
-                        };
-                        Model.Shops[i].HasSendRequest.Value = 1;
-                        Model.Shops[i].RequestsTotalCountCurrent.Value++;
-                        Model.Shops[i].RequestsTotalCountAll.Value++;
-                        Model.PlanEvent(k2Event, DayNumber + deltaTime);
+                            double deltaTime = i == 0 ? Model.ZR_TV_ValueGenerator1.GenerateValue() : Model.ZR_TV_ValueGenerator2.GenerateValue();
+                            var k2Event = new K2
+                            {
+                                ShopNumber = i,
+                                DayOfSupply = DayNumber
+                            };
+                            Model.Shops[i].HasSendRequest.Value = 1;
+                            Model.Shops[i].RequestsTotalCountCurrent.Value++;
+                            Model.Shops[i].RequestsTotalCountAll.Value++;
+                            Model.PlanEvent(k2Event, DayNumber + deltaTime);
 
-                        // Занесение в файл трассировки записи о запланированном событии
-                        Model.Tracer.PlanEventTrace(k2Event, 
-                                                    DayNumber + deltaTime,
-                                                    k2Event.ShopNumber);
+                            // Занесение в файл трассировки записи о запланированном событии
+                            Model.Tracer.PlanEventTrace(k2Event,
+                                                        DayNumber + deltaTime,
+                                                        k2Event.ShopNumber);
+                        }
                     }
                     else
                     {
@@ -64,12 +62,7 @@ namespace Model_Lab
                         Model.Shops[i].ProductUnrealizedCurrent.Value = Model.Shops[i].ProductAmountCurrent.Value;
                     }
 
-                    // Увеличиваем текущий суммарный объем 
-                    //Model.SVST.Value += Model.Shops[i].ProductDemandCurrent.Value;
-
                     Model.Shops[i].ProductDemandAll.Value += Model.Shops[i].ProductDemandCurrent.Value;               // спроса на товар
-                    //if (Model.Shops[i].HasSendRequest.Value == 1)
-                    //    Model.Shops[i].RequestsTotalCountAll.Value++; // заявок на пополнение товара
                     Model.Shops[i].ProductUnmetDemandAll.Value += Model.Shops[i].ProductUnmetDemandCurrent.Value;     // неудовлетворенного спроса на товар
                     Model.Shops[i].ProductUnrealizedAll.Value += Model.Shops[i].ProductUnrealizedCurrent.Value;       // пролежанного товара
                 }
@@ -88,12 +81,10 @@ namespace Model_Lab
                     Model.Tracer.PlanEventTrace(k1Event,
                                                 k1Event.DayNumber,
                                                 "VS[" + Model.Shops[0].ProductDemandCurrent.Value + "," + Model.Shops[1].ProductDemandCurrent.Value + "]");
-
-
                 }
                 if (Model.Day % 7 == 0) // == 1
                 {
-                    var k3Event = new K3();
+                    var k3Event = new K3 { NumberOfWeek = Model.Day / 7 };
                     Model.PlanEvent(k3Event, 0);
                     // Занесение в файл трассировки записи о запланированном событии
                     Model.Tracer.PlanEventTrace(k3Event,
@@ -113,10 +104,13 @@ namespace Model_Lab
         {
             #region Атрибуты события
 
+            /// <summary>
+            /// Номер магазина.
+            /// </summary>
             public int ShopNumber { get; set; }
 
             /// <summary>
-            /// День подачи заявки из магазина в ОС
+            /// День подачи заявки из магазина в ОС.
             /// </summary>
             public int DayOfSupply { get; set; }
 
@@ -138,22 +132,19 @@ namespace Model_Lab
         public class K3 : TimeModelEvent<SmoModel>
         {
             #region Атрибуты события
+
             /// <summary>
             /// Номер недели.
             /// </summary>
             public int NumberOfWeek { get; set; }
-            /// <summary>
-            /// Что-то.
-            /// </summary>
-            public double SVSTP_K3 { get; set; }
+
             #endregion
 
             protected override void HandleEvent(ModelEventArgs args)
             {
-                //Model.Tracer.AnyTrace("K3", "Week = " + NumberOfWeek);
                 Model.SVSTP.Value = Model.SVST.Value;
+                Model.Tracer.AnyTrace("TF №: " + NumberOfWeek, "\tSVST: " + Model.SVST.Value, "\tSVSTP: " + Model.SVSTP.Value);
                 Model.SVST.Value = 0;
-                Model.Tracer.AnyTrace("TF №: " + NumberOfWeek, "\tSVST: " + Model.SVST.Value, "\tSVSTP: " + Model.SVSTP.Value);                
             }
         }
     }

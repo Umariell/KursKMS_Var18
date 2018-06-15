@@ -1,7 +1,6 @@
 using CommonModel.Kernel;
 using CommonModel.RandomStreamProducing;
 using CommonModel.StatisticsCollecting;
-using System.Linq;
 
 namespace Model_Lab
 {
@@ -78,7 +77,6 @@ namespace Model_Lab
             ZR_TV_ValueGenerator1.Table.Add(5, 0.900);
             ZR_TV_ValueGenerator1.Table.Add(6, 1.000);
 
-
             ZR_TV_ValueGenerator2.Table.Add(0, 0.180);
             ZR_TV_ValueGenerator2.Table.Add(1, 0.209);
             ZR_TV_ValueGenerator2.Table.Add(2, 0.401);
@@ -87,21 +85,16 @@ namespace Model_Lab
             ZR_TV_ValueGenerator2.Table.Add(5, 0.900);
             ZR_TV_ValueGenerator2.Table.Add(6, 1.000);
 
-
             // значения генераторов зависящие от Shops[i].Mx и Sigma
             NormalGenerator_VDS1.Mx = Shops[0].Mx;
             NormalGenerator_VDS1.Sigma = Shops[0].Sigma;
             NormalGenerator_VDS2.Mx = Shops[1].Mx;
             NormalGenerator_VDS2.Sigma = Shops[1].Sigma;
-          
-
-
 
             (NormalGenerator_VDS1.BPN as GeneratedBaseRandomStream).Seed = 119 * seed;
             (NormalGenerator_VDS2.BPN as GeneratedBaseRandomStream).Seed = 197 * seed;
             (UniformGenerator_TVost1.BPN as GeneratedBaseRandomStream).Seed = 130 * seed;
             (UniformGenerator_TVost2.BPN as GeneratedBaseRandomStream).Seed = 237 * seed;
-
             #endregion
         }
 
@@ -132,16 +125,22 @@ namespace Model_Lab
             TraceModelHeader();
             //Печать заголовка строки состояния модели
             var DayNumber = 0;
-            TraceModel(DayNumber++);
 
             //Планирование начальных событий
+            // И вывод СБС
             var k1Event = new K1()
             {
                 DayNumber = DayNumber
             };
             PlanEvent(k1Event, DayNumber);
-            // Занесение в файл трассировки записи о запланированном событии
-            Tracer.PlanEventTrace(k1Event, DayNumber);
+            Tracer.PlanEventTrace(k1Event, DayNumber + 1);
+            var k3Event = new K3 { NumberOfWeek = 0 };
+            PlanEvent(k3Event, 0);
+            Tracer.PlanEventTrace(k3Event,
+                                        1);
+            Tracer.AnyTrace();
+            Tracer.AnyTrace();
+            TraceModel(DayNumber++);
             #endregion
         }
         /// <summary>
@@ -151,7 +150,6 @@ namespace Model_Lab
         /// <param name="runCount"></param>
         public override void FinishModelling(int variantCount, int runCount)
         {
-
             Tracer.TraceOut("===============================================================================");
             Tracer.TraceOut("============ Статистические результаты моделирования ==========================");
             Tracer.TraceOut("===============================================================================");
@@ -176,36 +174,37 @@ namespace Model_Lab
             Tracer.TraceOut("       потери от неудовлетворенного спроса: " + ((Shops[0].ProductUnmetDemandAll.Value * PNP / M) + (Shops[1].ProductUnmetDemandAll.Value * PNP / M)));
             Tracer.TraceOut("       потери от подачи заявки:             " + ((Shops[0].RequestsTotalCountAll.Value * PPZ / M) + (Shops[1].RequestsTotalCountAll.Value * PPZ / M)));
             Tracer.TraceOut("  в первом магазине: ---------------------------------------------");
-            Tracer.TraceOut("       потери от пролеживания товара SDP_VP[0] = " + ((Shops[0].ProductUnrealizedAll.Value * PP) / M));
-            Tracer.TraceOut("           макс:    " + (Max_SDP_PP[0].Stat * PP));//вместо минимакса Хохо приказал делать МО
+            Tracer.TraceOut("       потери от пролеживания товара SDP_VP[0] = " + (Shops[0].ProductUnrealizedAll.Value * PP / M));
+            Tracer.TraceOut("           среднее:     " + (Variance_SDP_PP[0].Mx * PP));
+            Tracer.TraceOut("           макс:    " + (Max_SDP_PP[0].Stat * PP));//вместо минимакса Хохо "приказал" делать МО
             Tracer.TraceOut("           мин:     " + (Min_SDP_PP[0].Stat * PP));
             Tracer.TraceOut("       потери от неудовлетворенного спроса SDP_NS[0] = " + (Shops[0].ProductUnmetDemandAll.Value * PNP / M));
+            Tracer.TraceOut("           среднее:     " + (Variance_SDP_PNP[0].Mx * PNP));
             Tracer.TraceOut("           макс:    " + (Max_SDP_PNP[0].Stat * PNP));
             Tracer.TraceOut("           мин:     " + (Min_SDP_PNP[0].Stat * PNP));
             Tracer.TraceOut("       потери от подачи заявки SDP_PZ[0] = " + (Shops[0].RequestsTotalCountAll.Value * PPZ / M));
-            Tracer.TraceOut("           макс:    " + (Max_SDP_PPZ[0].Stat * PPZ)); 
-            Tracer.TraceOut("           мин:     " + (Min_SDP_PPZ[0].Stat * PPZ));
+            Tracer.TraceOut("           среднее:     " + (Variance_SDP_PPZ[0].Mx * PPZ / M));
+            Tracer.TraceOut("           макс:    " + (Max_SDP_PPZ[0].Stat * PPZ / M));
+            Tracer.TraceOut("           мин:     " + (Min_SDP_PPZ[0].Stat * PPZ / M));
             Tracer.TraceOut("  во втором магазине: ---------------------------------------------");
             Tracer.TraceOut("       потери от пролеживания товара SDP_VP[1] = " + (Shops[1].ProductUnrealizedAll.Value * PP / M));
+            Tracer.TraceOut("           среднее:     " + (Variance_SDP_PP[1].Mx * PP));
             Tracer.TraceOut("           макс:    " + (Max_SDP_PP[1].Stat * PP));
             Tracer.TraceOut("           мин:     " + (Min_SDP_PP[1].Stat * PP));
             Tracer.TraceOut("       потери от неудовлетворенного спроса SDP_NS[1] = " + (Shops[1].ProductUnmetDemandAll.Value * PNP / M));
+            Tracer.TraceOut("           среднее:     " + (Variance_SDP_PNP[1].Mx * PNP));
             Tracer.TraceOut("           макс:    " + (Max_SDP_PNP[1].Stat * PNP));
             Tracer.TraceOut("           мин:     " + (Min_SDP_PNP[1].Stat * PNP));
             Tracer.TraceOut("       потери от подачи заявки SDP_PZ[1] = " + (Shops[1].RequestsTotalCountAll.Value * PPZ / M));
-            Tracer.TraceOut("           макс:    " + (Max_SDP_PPZ[1].Stat * PPZ));
-            Tracer.TraceOut("           мин:     " + (Min_SDP_PPZ[1].Stat * PPZ));
-
-
+            Tracer.TraceOut("           среднее:     " + (Variance_SDP_PPZ[1].Mx * PPZ / M));
+            Tracer.TraceOut("           макс:    " + (Max_SDP_PPZ[1].Stat * PPZ / M));
+            Tracer.TraceOut("           мин:     " + (Min_SDP_PPZ[1].Stat * PPZ / M));
 
             Tracer.AnyTrace("");
             Tracer.AnyTrace("");
             Tracer.TraceOut("======== II. Сбор статистики суммарной потери в торговой системе ==============");
             Tracer.AnyTrace("");
             Tracer.TraceOut(" МО суммарного объема поставок с оптового склада по всем магазинам: " + Variance_SVSTP.Mx);
-            
-
-
         }
 
 
@@ -223,9 +222,9 @@ namespace Model_Lab
             Tracer.AnyTrace("Количество магазинов: " + N);
             //Tracer.AnyTrace("");
             Tracer.AnyTrace("МО дневного спроса в i-ом магазине: " + Shops[0].Mx);
-           // Tracer.AnyTrace("");
+            //Tracer.AnyTrace("");
             Tracer.AnyTrace("СКО дневного спроса в i-ом магазине: " + Shops[0].Sigma);
-           // Tracer.AnyTrace("");
+            //Tracer.AnyTrace("");
             Tracer.AnyTrace("Точка восстановления: " + TV);
             //Tracer.AnyTrace("");
             Tracer.AnyTrace("Объем восстановления: " + VV);
@@ -235,13 +234,10 @@ namespace Model_Lab
             Tracer.AnyTrace("Потери от нереализованной прибыли PNP: " + PNP);
             //Tracer.AnyTrace("");
             Tracer.AnyTrace("Потери от подачи заявки на пополнение товарного запаса PPZ: " + PPZ);
-
-            Tracer.AnyTrace("Фиксированный интервал времени TF: 7 дн."); //TODO: axaxaxax
+            Tracer.AnyTrace("Фиксированный интервал времени TF: 7 дн.");
             Tracer.AnyTrace("Время прогона имитационной модели TP: " + M);
             Tracer.AnyTrace("");
             Tracer.AnyTrace("Начальное состояние модели:");
-            //Tracer.AnyTrace("");
-
         }
 
         /// <summary>
@@ -257,6 +253,5 @@ namespace Model_Lab
             Tracer.AnyTrace("");
             Tracer.AnyTrace("");
         }
-
     }
 }

@@ -19,16 +19,6 @@ namespace Model_Lab
         /// </summary>
         public const int M = 28;
 
-
-        /// <summary>
-        /// ряд распределения, двумерный массив, характеризующий закон распределения времени восстановления товарного запаса,
-        /// элементы которого P[i, j] – вероятность, 
-        /// с которой возникает подача заявки из i-го магазина через 
-        /// j-ый день в ОС(i= 1, … N; j=1,2...M)
-        /// </summary>
-        public double[,] ZR_TV = new double[N, M];
-
-
         //Во всех магазинах предполагаются одинаковыми следующие параметры:
 
         /// <summary>
@@ -185,8 +175,6 @@ namespace Model_Lab
         public Variance<double>[] Variance_SDP_PP;
         public Min<double>[] Min_SDP_PP;
         public Max<double>[] Max_SDP_PP;
-        public double[] Mx_SDP_PP;
-
 
         /// <summary>
         /// средние дневные потери от неудовлетворенного спроса в i-том магазине
@@ -194,8 +182,6 @@ namespace Model_Lab
         public Variance<double>[] Variance_SDP_PNP;
         public Min<double>[] Min_SDP_PNP;
         public Max<double>[] Max_SDP_PNP;
-        public double[] Mx_SDP_PNP;
-
 
         /// <summary>
         /// средние дневные потери от подачи заявок в i-том магазине
@@ -203,8 +189,6 @@ namespace Model_Lab
         public Variance<double>[] Variance_SDP_PPZ;
         public Min<double>[] Min_SDP_PPZ;
         public Max<double>[] Max_SDP_PPZ;
-        public double[] Mx_SDP_PPZ;
-
 
         /// <summary>
         /// суммарные средние дневные потери торговой системы
@@ -212,8 +196,6 @@ namespace Model_Lab
         public Variance<double> Variance_SSDS;
         public Min<double>[] Min_SSDS;
         public Max<double>[] Max_SSDS;
-        public double[] Mx_SSDS;
-
 
         /// <summary>
         /// суммарный объем текущего спроса на товар с оптового скалада за очередной фикс. интервал времени 
@@ -221,7 +203,7 @@ namespace Model_Lab
         public Variance<double> Variance_SVSTP;
         public Min<double> Min_SVSTP;
         public Max<double> Max_SVSTP;
-        public double[] Mx_SVSTP;
+
         #endregion
 
         #region Генераторы ПСЧ
@@ -278,7 +260,6 @@ namespace Model_Lab
                 Shops[i].ProductDemandAll = InitModelObject<TIntVar>("Суммарный объем спроса на товар в(во) " + i + "-ом магазине ");
                 Shops[i].ProductUnmetDemandAll = InitModelObject<TRealVar>("Суммарный объем неудовлетворенного спроса в(во) " + i + "-ом магазине ");
                 Shops[i].ProductUnrealizedAll = InitModelObject<TRealVar>("Суммарный объем пролежанного товара в(во) " + i + "-ом магазине ");
-
             }
 
             SVST = InitModelObject<TRealVar>("текущий суммарный объем спроса на товар (за день)");
@@ -316,7 +297,7 @@ namespace Model_Lab
             Min_SDP_PP[0].ConnectOnSet(Shops[0].ProductUnrealizedCurrent);
             Min_SDP_PP[1].ConnectOnSet(Shops[1].ProductUnrealizedCurrent);
 
-            //нереализуемая прибыль от неудовлетворенного спроса
+            //нереализованная прибыль от неудовлетворенного спроса
             Variance_SDP_PNP = InitModelObjectArray<Variance<double>>(N, "Сборщик статистики: средние дневные потери от неудовлетворенного спроса в i-том магазине");
             Variance_SDP_PNP[0].ConnectOnSet(Shops[0].ProductUnmetDemandCurrent);
             Variance_SDP_PNP[1].ConnectOnSet(Shops[1].ProductUnmetDemandCurrent);
@@ -348,12 +329,8 @@ namespace Model_Lab
             Max_SVSTP.ConnectOnSet(SVSTP);
             Min_SVSTP = InitModelObject<Min<double>>("Минимум объема поставок со склада в магазины.");
             Min_SVSTP.ConnectOnSet(SVSTP);
-
-            
-
-        #endregion
-    }
-
+            #endregion
+        }
         #endregion
     }
     #endregion
