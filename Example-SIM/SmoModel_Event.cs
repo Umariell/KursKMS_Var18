@@ -85,15 +85,10 @@ namespace Model_Lab
                     };
                     Model.PlanEvent(k1Event,  
                                     1);
-                    Model.Tracer.PlanEventTrace(k1Event, 
-                                                k1Event.DayNumber, 
-                                                "VS[0," + Model.Shops[0].ProductDemandCurrent.Value + "]" + " \tVS[1," + Model.Shops[1].ProductDemandCurrent.Value + "]");
+                    Model.Tracer.PlanEventTrace(k1Event,
+                                                k1Event.DayNumber,
+                                                "VS[" + Model.Shops[0].ProductDemandCurrent.Value + "," + Model.Shops[1].ProductDemandCurrent.Value + "]");
 
-                    // Занесение в файл трассировки записи о запланированном событии
-                    //Model.Tracer.PlanEventTrace(k1Event, 
-                    //                            k1Event.DayNumber);
-                    //Model.Tracer.PlanEventTrace(k1Event, "VS[0," + Model.Shops[0].ProductDemandCurrent.Value+"]");
-                    //Model.Tracer.PlanEventTrace(k1Event, "VS[1," + Model.Shops[1].ProductDemandCurrent.Value + "]");
 
                 }
                 if (Model.Day % 7 == 0) // == 1
@@ -109,7 +104,6 @@ namespace Model_Lab
                 Model.TraceModel(DayNumber);
             }
         }
-
 
         /// <summary>
         /// Класс для события 2 - пополнение товарного запаса в магазине Nмаг
@@ -131,7 +125,6 @@ namespace Model_Lab
             // Алгоритм обработки события            
             protected override void HandleEvent(ModelEventArgs args)
             {
-                //Model.Tracer.AnyTrace("K2", "DayOfSupply = " + DayOfSupply);
                 // Выполнить поставку товара в магазин с номером ShopNumber
                 Model.Shops[ShopNumber].ProductAmountCurrent.Value += Model.VV;
                 Model.Shops[ShopNumber].HasSendRequest.Value = 0;
@@ -160,7 +153,6 @@ namespace Model_Lab
                 //Model.Tracer.AnyTrace("K3", "Week = " + NumberOfWeek);
                 Model.SVSTP.Value = Model.SVST.Value;
                 Model.SVST.Value = 0;
-                // TODO: какая-то трассировка.
                 Model.Tracer.AnyTrace("TF №: " + NumberOfWeek, "\tSVST: " + Model.SVST.Value, "\tSVSTP: " + Model.SVSTP.Value);                
             }
         }
