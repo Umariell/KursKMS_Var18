@@ -33,33 +33,31 @@ namespace Model_Lab
                     {
                         // Неудовлетворенный спрос
                         Model.Shops[i].ProductUnmetDemandCurrent.Value = Math.Abs(Model.Shops[i].ProductDemandCurrent.Value - Model.Shops[i].ProductAmountCurrent.Value);
-
-                        // Планирование события 1 - появление заявки в СМО
-                        // Задание интервала времени (для каждого магазина) через который наступит событие
-                        if (Model.Shops[i].HasSendRequest == 0)
-                        {
-                            double deltaTime = i == 0 ? Model.ZR_TV_ValueGenerator1.GenerateValue() : Model.ZR_TV_ValueGenerator2.GenerateValue();
-                            var k2Event = new K2
-                            {
-                                ShopNumber = i,
-                                DayOfSupply = DayNumber
-                            };
-                            Model.Shops[i].HasSendRequest.Value = 1;
-                            Model.Shops[i].RequestsTotalCountCurrent.Value++;
-                            Model.Shops[i].RequestsTotalCountAll.Value++;
-                            Model.PlanEvent(k2Event, DayNumber + deltaTime);
-
-                            // Занесение в файл трассировки записи о запланированном событии
-                            Model.Tracer.PlanEventTrace(k2Event,
-                                                        DayNumber + deltaTime,
-                                                        k2Event.ShopNumber);
-                        }
                     }
                     else
                     {
                         // Если спрос меньше текущего объема товара, то вычитаем из объема товара объем спроса
                         Model.Shops[i].ProductAmountCurrent.Value -= Model.Shops[i].ProductDemandCurrent.Value;
                         Model.Shops[i].ProductUnrealizedCurrent.Value = Model.Shops[i].ProductAmountCurrent.Value;
+                    }
+
+                    if (Model.Shops[i].ProductAmountCurrent.Value < Model.TV && Model.Shops[i].HasSendRequest == 0)
+                    {
+                        double deltaTime = i == 0 ? Model.ZR_TV_ValueGenerator1.GenerateValue() : Model.ZR_TV_ValueGenerator2.GenerateValue();
+                        var k2Event = new K2
+                        {
+                            ShopNumber = i,
+                            DayOfSupply = DayNumber
+                        };
+                        Model.Shops[i].HasSendRequest.Value = 1;
+                        Model.Shops[i].RequestsTotalCountCurrent.Value++;
+                        Model.Shops[i].RequestsTotalCountAll.Value++;
+                        Model.PlanEvent(k2Event, DayNumber + deltaTime);
+
+                        // Занесение в файл трассировки записи о запланированном событии
+                        Model.Tracer.PlanEventTrace(k2Event,
+                                                    DayNumber + deltaTime,
+                                                    k2Event.ShopNumber);
                     }
 
                     Model.Shops[i].ProductDemandAll.Value += Model.Shops[i].ProductDemandCurrent.Value;               // спроса на товар
