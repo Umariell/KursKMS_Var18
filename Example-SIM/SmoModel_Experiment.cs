@@ -47,7 +47,7 @@ namespace Model_Lab
         {
             #region Параметры модели
 
-            VV = 100;
+            VV = 45;
             TV = 30;
 
             PP = 10;
@@ -57,7 +57,7 @@ namespace Model_Lab
             TP = 2000;
             for (int i = 0; i < N; i++)
             {
-                Shops[i].Mx = 36;
+                Shops[i].Mx = 20;
                 Shops[i].Sigma = 4;
             }
 
@@ -154,13 +154,15 @@ namespace Model_Lab
             Tracer.TraceOut("============ Статистические результаты моделирования ==========================");
             Tracer.TraceOut("===============================================================================");
             Tracer.AnyTrace("");
-            Tracer.TraceOut("======= I. Сбор статистики средней дневной потери торговой системы ============");
+            Tracer.TraceOut("======= I. Сбор статистики по средним дневным потерям торговой системы ========");
             Tracer.AnyTrace("");
+            //Tracer.AnyTrace("");
             Tracer.AnyTrace("1. Сбор статистики средней дневной потери по каждому магазину (руб)");
-            Tracer.TraceOut("   в первом магазине:  " + ((Shops[0].ProductUnrealizedAll.Value * PP / M) + (Shops[0].ProductUnmetDemandAll.Value * PNP / M) + (Shops[0].RequestsTotalCountAll.Value * PPZ / M)));
-            Tracer.TraceOut("   во втором магазине: " + ((Shops[1].ProductUnrealizedAll.Value * PP / M) + (Shops[1].ProductUnmetDemandAll.Value * PNP / M) + (Shops[1].RequestsTotalCountAll.Value * PPZ / M)));
+            Tracer.TraceOut("   средние дн. потери в первом магазине:  " + ((Shops[0].ProductUnrealizedAll.Value * PP / M) + (Shops[0].ProductUnmetDemandAll.Value * PNP / M) + (Shops[0].RequestsTotalCountAll.Value * PPZ / M)));
+            Tracer.TraceOut("   средние дн. потери во втором магазине: " + ((Shops[1].ProductUnrealizedAll.Value * PP / M) + (Shops[1].ProductUnmetDemandAll.Value * PNP / M) + (Shops[1].RequestsTotalCountAll.Value * PPZ / M)));
             Tracer.AnyTrace("");
-            Tracer.TraceOut("2. Сбор статистики средней дневной потери по всей системе (руб): SSDS = "
+            //Tracer.AnyTrace("");
+            Tracer.TraceOut("2. Сбор статистики по средним дневным потерям по всей системе (руб): SSDS = "
                 + ((Shops[0].ProductUnrealizedAll.Value * PP / M)
                 + (Shops[1].ProductUnrealizedAll.Value * PP / M)
                 + (Shops[0].ProductUnmetDemandAll.Value * PNP / M)
@@ -168,41 +170,45 @@ namespace Model_Lab
                 + (Shops[0].RequestsTotalCountAll.Value * PPZ / M)
                 + (Shops[1].RequestsTotalCountAll.Value * PPZ / M)));
             Tracer.AnyTrace("");
-            Tracer.TraceOut("3. Сбор статистики средней дневной потери по отдельным составляющим (руб): ");
-            Tracer.TraceOut("  в системе: -----------------------------------------------------");
-            Tracer.TraceOut("       потери от пролеживания товара:       " + ((Shops[0].ProductUnrealizedAll.Value * PP / M) + (Shops[1].ProductUnrealizedAll.Value * PP / M)));
-            Tracer.TraceOut("       потери от неудовлетворенного спроса: " + ((Shops[0].ProductUnmetDemandAll.Value * PNP / M) + (Shops[1].ProductUnmetDemandAll.Value * PNP / M)));
-            Tracer.TraceOut("       потери от подачи заявки:             " + ((Shops[0].RequestsTotalCountAll.Value * PPZ / M) + (Shops[1].RequestsTotalCountAll.Value * PPZ / M)));
-            Tracer.TraceOut("  в первом магазине: ---------------------------------------------");
-            Tracer.TraceOut("       потери от пролеживания товара SDP_VP[0] = " + (Shops[0].ProductUnrealizedAll.Value * PP / M));
-            Tracer.TraceOut("           среднее:     " + (Variance_SDP_PP[0].Mx * PP));
-            Tracer.TraceOut("           макс:    " + (Max_SDP_PP[0].Stat * PP));//вместо минимакса Хохо "приказал" делать МО
-            Tracer.TraceOut("           мин:     " + (Min_SDP_PP[0].Stat * PP));
-            Tracer.TraceOut("       потери от неудовлетворенного спроса SDP_NS[0] = " + (Shops[0].ProductUnmetDemandAll.Value * PNP / M));
-            Tracer.TraceOut("           среднее:     " + (Variance_SDP_PNP[0].Mx * PNP));
-            Tracer.TraceOut("           макс:    " + (Max_SDP_PNP[0].Stat * PNP));
-            Tracer.TraceOut("           мин:     " + (Min_SDP_PNP[0].Stat * PNP));
-            Tracer.TraceOut("       потери от подачи заявки SDP_PZ[0] = " + (Shops[0].RequestsTotalCountAll.Value * PPZ / M));
-            Tracer.TraceOut("           среднее:     " + (Variance_SDP_PPZ[0].Mx * PPZ / M));
-            Tracer.TraceOut("           макс:    " + (Max_SDP_PPZ[0].Stat * PPZ / M));
-            Tracer.TraceOut("           мин:     " + (Min_SDP_PPZ[0].Stat * PPZ / M));
-            Tracer.TraceOut("  во втором магазине: ---------------------------------------------");
-            Tracer.TraceOut("       потери от пролеживания товара SDP_VP[1] = " + (Shops[1].ProductUnrealizedAll.Value * PP / M));
-            Tracer.TraceOut("           среднее:     " + (Variance_SDP_PP[1].Mx * PP));
-            Tracer.TraceOut("           макс:    " + (Max_SDP_PP[1].Stat * PP));
-            Tracer.TraceOut("           мин:     " + (Min_SDP_PP[1].Stat * PP));
-            Tracer.TraceOut("       потери от неудовлетворенного спроса SDP_NS[1] = " + (Shops[1].ProductUnmetDemandAll.Value * PNP / M));
-            Tracer.TraceOut("           среднее:     " + (Variance_SDP_PNP[1].Mx * PNP));
-            Tracer.TraceOut("           макс:    " + (Max_SDP_PNP[1].Stat * PNP));
-            Tracer.TraceOut("           мин:     " + (Min_SDP_PNP[1].Stat * PNP));
-            Tracer.TraceOut("       потери от подачи заявки SDP_PZ[1] = " + (Shops[1].RequestsTotalCountAll.Value * PPZ / M));
-            Tracer.TraceOut("           среднее:     " + (Variance_SDP_PPZ[1].Mx * PPZ / M));
-            Tracer.TraceOut("           макс:    " + (Max_SDP_PPZ[1].Stat * PPZ / M));
-            Tracer.TraceOut("           мин:     " + (Min_SDP_PPZ[1].Stat * PPZ / M));
-
+            //Tracer.AnyTrace("");
+            Tracer.TraceOut("3. Сбор статистики по средним дневным потерям по отдельным составляющим (руб): ");
+            Tracer.AnyTrace("");
+            Tracer.TraceOut("       в системе: -------------------------------------------------------------");
+            Tracer.TraceOut("           средние потери от пролеживания товара:       " + ((Shops[0].ProductUnrealizedAll.Value * PP / M) + (Shops[1].ProductUnrealizedAll.Value * PP / M)));
+            Tracer.TraceOut("           средние потери от неудовлетворенного спроса: " + ((Shops[0].ProductUnmetDemandAll.Value * PNP / M) + (Shops[1].ProductUnmetDemandAll.Value * PNP / M)));
+            Tracer.TraceOut("           средние потери от подачи заявки:             " + ((Shops[0].RequestsTotalCountAll.Value * PPZ / M) + (Shops[1].RequestsTotalCountAll.Value * PPZ / M)));
+            //Tracer.AnyTrace("");
+            Tracer.TraceOut("       в первом магазине: -----------------------------------------------------");
+            Tracer.TraceOut("           средние потери от пролеживания товара SDP_VP[0] = " + (Shops[0].ProductUnrealizedAll.Value * PP / M));
+            Tracer.TraceOut("               МО:      " + (Variance_SDP_PP[0].Mx * PP));
+            //Tracer.TraceOut("           макс:    " + (Max_SDP_PP[0].Stat * PP));//вместо минимакса Хохо "приказал" делать МО
+            //Tracer.TraceOut("           мин:     " + (Min_SDP_PP[0].Stat * PP));
+            Tracer.TraceOut("           средние потери от неудовлетворенного спроса SDP_NS[0] = " + (Shops[0].ProductUnmetDemandAll.Value * PNP / M));
+            Tracer.TraceOut("               МО:      " + (Variance_SDP_PNP[0].Mx * PNP));
+            //Tracer.TraceOut("           макс:    " + (Max_SDP_PNP[0].Stat * PNP));
+            //Tracer.TraceOut("           мин:     " + (Min_SDP_PNP[0].Stat * PNP));
+            Tracer.TraceOut("           средние потери от подачи заявки SDP_PZ[0] = " + (Shops[0].RequestsTotalCountAll.Value * PPZ / M));
+            Tracer.TraceOut("               МО:      " + (Variance_SDP_PPZ[0].Mx * PPZ / M));
+            //Tracer.TraceOut("           макс:    " + (Max_SDP_PPZ[0].Stat * PPZ / M));
+            //Tracer.TraceOut("           мин:     " + (Min_SDP_PPZ[0].Stat * PPZ / M));
+            //Tracer.AnyTrace("");
+            Tracer.TraceOut("       во втором магазине: ----------------------------------------------------");
+            Tracer.TraceOut("           средние потери от пролеживания товара SDP_VP[1] = " + (Shops[1].ProductUnrealizedAll.Value * PP / M));
+            Tracer.TraceOut("               МО:      " + (Variance_SDP_PP[1].Mx * PP));
+            //Tracer.TraceOut("           макс:    " + (Max_SDP_PP[1].Stat * PP));
+            //Tracer.TraceOut("           мин:     " + (Min_SDP_PP[1].Stat * PP));
+            Tracer.TraceOut("           средние потери от неудовлетворенного спроса SDP_NS[1] = " + (Shops[1].ProductUnmetDemandAll.Value * PNP / M));
+            Tracer.TraceOut("               МО:      " + (Variance_SDP_PNP[1].Mx * PNP));
+            //Tracer.TraceOut("           макс:    " + (Max_SDP_PNP[1].Stat * PNP));
+            //Tracer.TraceOut("           мин:     " + (Min_SDP_PNP[1].Stat * PNP));
+            Tracer.TraceOut("           средние потери от подачи заявки SDP_PZ[1] = " + (Shops[1].RequestsTotalCountAll.Value * PPZ / M));
+            Tracer.TraceOut("               МО:      " + (Variance_SDP_PPZ[1].Mx * PPZ / M));
+            //Tracer.TraceOut("           макс:    " + (Max_SDP_PPZ[1].Stat * PPZ / M));
+            //Tracer.TraceOut("           мин:     " + (Min_SDP_PPZ[1].Stat * PPZ / M));
             Tracer.AnyTrace("");
             Tracer.AnyTrace("");
-            Tracer.TraceOut("======== II. Сбор статистики суммарной потери в торговой системе ==============");
+            Tracer.AnyTrace("");
+            Tracer.TraceOut("======== II. Сбор статистики по суммарным потерям в торговой системе ==========");
             Tracer.AnyTrace("");
             Tracer.TraceOut(" МО суммарного объема поставок с оптового склада по всем магазинам: " + Variance_SVSTP.Mx);
         }

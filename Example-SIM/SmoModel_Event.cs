@@ -33,7 +33,7 @@ namespace Model_Lab
                     {
                         // Неудовлетворенный спрос
                         Model.Shops[i].ProductUnmetDemandCurrent.Value = Math.Abs(Model.Shops[i].ProductDemandCurrent.Value - Model.Shops[i].ProductAmountCurrent.Value);
-
+                        //TODO: у нас не учитывается условие (Model.Shops[i].ProductAmountCurrent.Value <= Model.TV) ! куда его?
                         // Планирование события 1 - появление заявки в СМО
                         // Задание интервала времени (для каждого магазина) через который наступит событие
                         if (Model.Shops[i].HasSendRequest == 0)
@@ -67,7 +67,7 @@ namespace Model_Lab
                     Model.Shops[i].ProductUnrealizedAll.Value += Model.Shops[i].ProductUnrealizedCurrent.Value;       // пролежанного товара
                 }
                 
-                //Планирование следующего события окончания рабочего дня; НО!!!!
+                //Планирование следующего события окончания рабочего дня;
                 //если время кончилось, планируем событие 3
                 Model.Day++;
                 if (Model.Day <= M)
@@ -78,6 +78,7 @@ namespace Model_Lab
                     };
                     Model.PlanEvent(k1Event,  
                                     1);
+                    //TODO: добавить в нач. СБС VS[спрос1;спрос2]
                     Model.Tracer.PlanEventTrace(k1Event,
                                                 k1Event.DayNumber,
                                                 "VS[" + Model.Shops[0].ProductDemandCurrent.Value + "," + Model.Shops[1].ProductDemandCurrent.Value + "]");
