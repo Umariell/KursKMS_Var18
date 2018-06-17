@@ -47,8 +47,8 @@ namespace Model_Lab
         {
             #region Параметры модели
 
-            VV = 45;
-            TV = 30;
+            VV = 100;
+            TV = 70;
 
             PP = 10;
             PNP = 140;
